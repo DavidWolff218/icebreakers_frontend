@@ -1,8 +1,8 @@
-import React, { Component } from "react";
+import React from "react";
 
-export class allUsers extends Component {
+const allUsers = () => {
   
-  userColor = (userObj) => {
+ const userColor = (userObj) => {
     if (userObj.is_active === true) {
       return <span><h5 className="userTrue">{userObj.username}</h5></span>
     } else {
@@ -10,7 +10,7 @@ export class allUsers extends Component {
     }
   }
   
-  renderAllUsers = () => {
+ const renderAllUsers = () => {
     
     let allUsersArray = this.props.users.sort((a, b) => a.id - b.id);
     
@@ -23,7 +23,7 @@ export class allUsers extends Component {
     });
   };
 
-  renderBox = () => {
+ const renderBox = () => {
     if (this.props.gameStarted === false) {
       return null
     } else {
@@ -34,13 +34,13 @@ export class allUsers extends Component {
   };
 }
 
-  render() {
+ 
     return (
     <div>
       {this.renderBox()}
     </div>
     )
-  }
+  
 }
 
 export default allUsers;
