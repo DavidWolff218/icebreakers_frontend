@@ -1,10 +1,9 @@
-import React, { Component } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import icebreakersv8 from "../logo/icebreakersv8.png";
 import { Container, Row, Col } from "react-bootstrap";
 
-export class home extends Component {
-  render() {
+const home = () => {  
     return (
       <Container>
         <Row className="boot-home-logo">
@@ -39,7 +38,6 @@ export class home extends Component {
         <Row className="boot-home-row"/>
       </Container>
     );
-  }
 }
 
 export default home;
