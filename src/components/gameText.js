@@ -1,45 +1,63 @@
-import React, { Component } from "react";
+import React from "react";
+// import Voting from "./voting";
 
-export class gameText extends Component {
-  renderGameText = () => {
-    let player = this.props.currentPlayer;
-    let question = this.props.currentQuestion.content;
-    return (
-      <div>
-        <h3 className="currentPlayer">{player}</h3>
-        <h3 className="currentQuestion">{question}</h3>
-        <br></br>
-        {this.props.playerButton()}
-        {this.props.hostButton()}
-      </div>
-    );
+const gameText = (props) => {
+  const renderGameText = () => {
+    let player = props.currentPlayer;
+    // if (props.votingQuestionA) {
+    //   return (
+    //     <Voting
+    //       currentPlayer={props.currentPlayer}
+    //       votingQuestionA={props.votingQuestionA}
+    //       votingQuestionB={props.votingQuestionB}
+    //       hostButton={props.hostButton}
+    //       handleVote={props.handleVote}
+    //       timerRunning={props.timerRunning}
+    //       runTimer={props.runTimer}
+    //       timerSeconds={props.timerSeconds}
+    //       resetTimer={props.resetTimer}
+    //     />
+    //   );
+    // } else {
+      return (
+        <div>
+          <h3 className="currentPlayer">{player}</h3>
+          <h3 className="currentQuestion">
+            {props.currentQuestion.content}
+          </h3>
+          <br></br>
+          {props.playerButton()}
+          {props.hostButton()}
+        </div>
+      );
+    // }
   };
 
-  callReset = (resetFunc) => {
+  const callReset = (resetFunc) => {
     setTimeout(resetFunc, 2000);
   };
 
-  gameText = () => {
+  const gameText = () => {
     if (
-      this.props.reshufflingQuestions &&
-      this.props.reshufflingUsers === true
+      props.reshufflingQuestions &&
+      props.reshufflingUsers === true
     ) {
-      this.callReset(this.props.resetUsersAndQuestionsShuffle);
+      callReset(props.resetUsersAndQuestionsShuffle);
       return <h3>Reshuffling Questions and Users...</h3>;
-    } else if (this.props.reshufflingUsers === true) {
-      this.callReset(this.props.resetUsersShuffle);
+    } else if (props.reshufflingUsers === true) {
+      callReset(props.resetUsersShuffle);
       return <h3>Reshuffling Users...</h3>;
-    } else if (this.props.reshufflingQuestions === true) {
-      this.callReset(this.props.resetQuestionsShuffle);
+    } else if (props.reshufflingQuestions === true) {
+      callReset(props.resetQuestionsShuffle);
       return <h3>Reshuffling Questions...</h3>;
     } else {
-      return this.renderGameText();
+      return renderGameText();
     }
   };
 
-  render() {
-    return <div>{this.gameText()}</div>;
-  }
+
+    return <div>{gameText()}</div>;
+  
 }
 
 export default gameText;
