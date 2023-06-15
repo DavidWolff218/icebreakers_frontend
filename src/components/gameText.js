@@ -1,8 +1,8 @@
-import React, { Component } from "react";
+import React from "react";
 import Voting from "./voting";
 
-export class gameText extends Component {
-  renderGameText = () => {
+const gameText = (props) => {
+  const renderGameText = () => {
     let player = this.props.currentPlayer;
     if (this.props.votingQuestionA) {
       return (
@@ -33,11 +33,11 @@ export class gameText extends Component {
     }
   };
 
-  callReset = (resetFunc) => {
+  const callReset = (resetFunc) => {
     setTimeout(resetFunc, 2000);
   };
 
-  gameText = () => {
+  const gameText = () => {
     if (
       this.props.reshufflingQuestions &&
       this.props.reshufflingUsers === true
@@ -51,13 +51,13 @@ export class gameText extends Component {
       this.callReset(this.props.resetQuestionsShuffle);
       return <h3>Reshuffling Questions...</h3>;
     } else {
-      return this.renderGameText();
+      return renderGameText();
     }
   };
 
-  render() {
-    return <div>{this.gameText()}</div>;
-  }
+
+    return <div>{gameText()}</div>;
+  
 }
 
 export default gameText;

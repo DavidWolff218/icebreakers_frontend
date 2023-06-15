@@ -1,7 +1,7 @@
 import React from "react";
 
 const allUsers = (props) => {
-console.log('test')
+
   const renderAllUsers = () => {
     let allUsersArray = props.users.sort((a, b) => a.id - b.id);
 
