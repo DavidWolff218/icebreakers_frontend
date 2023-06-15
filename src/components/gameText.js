@@ -1,36 +1,36 @@
 import React from "react";
-import Voting from "./voting";
+// import Voting from "./voting";
 
 const gameText = (props) => {
   const renderGameText = () => {
-    let player = this.props.currentPlayer;
-    if (this.props.votingQuestionA) {
-      return (
-        <Voting
-          currentPlayer={this.props.currentPlayer}
-          votingQuestionA={this.props.votingQuestionA}
-          votingQuestionB={this.props.votingQuestionB}
-          hostButton={this.props.hostButton}
-          handleVote={this.props.handleVote}
-          timerRunning={this.props.timerRunning}
-          runTimer={this.props.runTimer}
-          timerSeconds={this.props.timerSeconds}
-          resetTimer={this.props.resetTimer}
-        />
-      );
-    } else {
+    let player = props.currentPlayer;
+    // if (props.votingQuestionA) {
+    //   return (
+    //     <Voting
+    //       currentPlayer={props.currentPlayer}
+    //       votingQuestionA={props.votingQuestionA}
+    //       votingQuestionB={props.votingQuestionB}
+    //       hostButton={props.hostButton}
+    //       handleVote={props.handleVote}
+    //       timerRunning={props.timerRunning}
+    //       runTimer={props.runTimer}
+    //       timerSeconds={props.timerSeconds}
+    //       resetTimer={props.resetTimer}
+    //     />
+    //   );
+    // } else {
       return (
         <div>
           <h3 className="currentPlayer">{player}</h3>
           <h3 className="currentQuestion">
-            {this.props.currentQuestion.content}
+            {props.currentQuestion.content}
           </h3>
           <br></br>
-          {this.props.playerButton()}
-          {this.props.hostButton()}
+          {props.playerButton()}
+          {props.hostButton()}
         </div>
       );
-    }
+    // }
   };
 
   const callReset = (resetFunc) => {
@@ -39,16 +39,16 @@ const gameText = (props) => {
 
   const gameText = () => {
     if (
-      this.props.reshufflingQuestions &&
-      this.props.reshufflingUsers === true
+      props.reshufflingQuestions &&
+      props.reshufflingUsers === true
     ) {
-      this.callReset(this.props.resetUsersAndQuestionsShuffle);
+      callReset(props.resetUsersAndQuestionsShuffle);
       return <h3>Reshuffling Questions and Users...</h3>;
-    } else if (this.props.reshufflingUsers === true) {
-      this.callReset(this.props.resetUsersShuffle);
+    } else if (props.reshufflingUsers === true) {
+      callReset(props.resetUsersShuffle);
       return <h3>Reshuffling Users...</h3>;
-    } else if (this.props.reshufflingQuestions === true) {
-      this.callReset(this.props.resetQuestionsShuffle);
+    } else if (props.reshufflingQuestions === true) {
+      callReset(props.resetQuestionsShuffle);
       return <h3>Reshuffling Questions...</h3>;
     } else {
       return renderGameText();
