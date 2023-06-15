@@ -1,35 +1,35 @@
-import React, { Component } from "react";
+import React from "react";
 
-export class voting extends Component {
-  componentDidMount() {
-    this.props.runTimer();
-  }
-  componentWillUnmount(){
-    this.props.resetTimer()
-  }
+const voting = (props) => {
+  // componentDidMount() {
+  //   this.props.runTimer();
+  // }
+  // componentWillUnmount(){
+  //   this.props.resetTimer()
+  // }
 
-  render() {
+  //need to correct ^^ when re-intergrting coting feature
+
     return (
       <div>
-        <h3 className="currentPlayer">{this.props.currentPlayer}</h3>
+        <h3 className="currentPlayer">{props.currentPlayer}</h3>
         <h3 className="currentQuestion">
           <button
-            onClick={() => this.props.handleVote(this.props.votingQuestionA.id)}
+            onClick={() => props.handleVote(props.votingQuestionA.id)}
           >
-            {this.props.votingQuestionA.content}
+            {props.votingQuestionA.content}
           </button>
         </h3>
         <h3 className="currentQuestion">
           <button
-            onClick={() => this.props.handleVote(this.props.votingQuestionB.id)}
+            onClick={() => props.handleVote(props.votingQuestionB.id)}
           >
-            {this.props.votingQuestionB.content}
+            {props.votingQuestionB.content}
           </button>
         </h3>
-        <h3>{this.props.timerSeconds}</h3>
+        <h3>{props.timerSeconds}</h3>
       </div>
     );
-  }
 }
 
 export default voting;
