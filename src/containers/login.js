@@ -1,14 +1,14 @@
-import React from "react";
-import { useState } from 'react';
+import React, {useState} from "react";
 import icebreakersv8 from "../logo/icebreakersv8.png";
 import { Container, Row, Col } from "react-bootstrap";
 
-const Login = () => {
+const Login = (props) => {
 
-  
-  const [roomName, setRoomName] = useState('')
-  const [password, setPassword] = useState('')
-  const [username, setUsername] = useState('')
+  const [room, setRoom] = useState({
+    room_name: "",
+    password: "",
+    username: ""
+  })
 
   // state = {
   //   room_name: "",
@@ -17,6 +17,12 @@ const Login = () => {
   // };
 
   const handleChange = (event) => {
+    setRoom((prev) => {
+      return {
+        ...prev,
+        [event.target.name]: event.target.value
+      }
+    })
     // setState({ [event.target.name]: event.target.value });
   };
 
@@ -28,25 +34,29 @@ const Login = () => {
         "Content-Type": "application/json",
         Accept: "application/json",
       },
-      body: JSON.stringify({ room: {room_name: roomName, password: password, username: username }}),
+      body: JSON.stringify({ room: room}),
     };
     fetch("http://localhost:3000/", reqObj)
       .then((resp) => resp.json())
       .then((resp) => {
         if (resp.user) {
           localStorage.setItem("token", resp.jwt);
-          this.props.setLogin(
+          props.setLogin(
             resp.user,
             resp.room.room_name,
             resp.room.host_id,
             resp.room.host_name
           );
-          this.props.history.push(`/room/${resp.room.id}`);
+          props.history.push(`/room/${resp.room.id}`);
         } else {
           alert(resp.error);
         }
       });
-    this.setState({ room_name: "", password: "", username: "" });
+    setRoom({
+      room_name: "",
+      password: "",
+      username: ""
+    })
   };
 
   const renderForm = () => {
@@ -57,7 +67,7 @@ const Login = () => {
         <input
           className="form-input"
           name="room_name"
-          value={roomName}
+          value={room.room_name}
           onChange={handleChange}
         />
         <br></br>
@@ -67,7 +77,7 @@ const Login = () => {
           className="form-input"
           name="password"
           type="password"
-          value={this.state.password}
+          value={room.password}
           onChange={handleChange}
         />
         <br></br>
