@@ -1,19 +1,26 @@
-import React, { Component } from "react";
+import React from "react";
+import { useState } from 'react';
 import icebreakersv8 from "../logo/icebreakersv8.png";
 import { Container, Row, Col } from "react-bootstrap";
 
-export class login extends Component {
-  state = {
-    room_name: "",
-    password: "",
-    username: "",
+const Login = () => {
+
+  
+  const [roomName, setRoomName] = useState('')
+  const [password, setPassword] = useState('')
+  const [username, setUsername] = useState('')
+
+  // state = {
+  //   room_name: "",
+  //   password: "",
+  //   username: "",
+  // };
+
+  const handleChange = (event) => {
+    // setState({ [event.target.name]: event.target.value });
   };
 
-  handleChange = (event) => {
-    this.setState({ [event.target.name]: event.target.value });
-  };
-
-  handleSubmit = (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
     const reqObj = {
       method: "POST",
@@ -21,7 +28,7 @@ export class login extends Component {
         "Content-Type": "application/json",
         Accept: "application/json",
       },
-      body: JSON.stringify({ room: this.state }),
+      body: JSON.stringify({ room: {room_name: roomName, password: password, username: username }}),
     };
     fetch("http://localhost:3000/", reqObj)
       .then((resp) => resp.json())
@@ -42,16 +49,16 @@ export class login extends Component {
     this.setState({ room_name: "", password: "", username: "" });
   };
 
-  renderForm = () => {
+  const renderForm = () => {
     return (
-      <form className="create-room-form" onSubmit={this.handleSubmit}>
+      <form className="create-room-form" onSubmit={handleSubmit}>
         <label className="form-label">Enter Room Name</label>
         <br></br>
         <input
           className="form-input"
           name="room_name"
-          value={this.state.room_name}
-          onChange={this.handleChange}
+          value={roomName}
+          onChange={handleChange}
         />
         <br></br>
         <label className="form-label">Enter Password</label>
@@ -61,7 +68,7 @@ export class login extends Component {
           name="password"
           type="password"
           value={this.state.password}
-          onChange={this.handleChange}
+          onChange={handleChange}
         />
         <br></br>
         <label className="form-label">Create Player Name</label>
@@ -70,7 +77,7 @@ export class login extends Component {
           className="form-input"
           name="username"
           value={this.state.username}
-          onChange={this.handleChange}
+          onChange={handleChange}
         />
         <br></br>
         <button className="form-btn" type="submit">
@@ -80,7 +87,6 @@ export class login extends Component {
     );
   };
 
-  render() {
     return (
       <Container>
         <Row className="boot-home-logo">
@@ -93,13 +99,12 @@ export class login extends Component {
         <Row>
           <Col className="col"/>
           <Col className="max-width-400 col-10 align-self-center">
-            {this.renderForm()}
+            {renderForm()}
           </Col>
           <Col className="col"/>
         </Row>
       </Container>
     );
-  }
 }
 
-export default login;
+export default Login;

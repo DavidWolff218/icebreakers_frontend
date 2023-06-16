@@ -27,7 +27,7 @@ const home = () => {
         <Row>
           <Col className="col-2"/>
           <Col className="col align-self-center">
-            <Link to="/login">
+            <Link to="/Login">
               <button className="homeJoinBtn">
                 <h3 className="homeJoinBtnText">Join a Room</h3>
               </button>
