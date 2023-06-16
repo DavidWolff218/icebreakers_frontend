@@ -10,20 +10,8 @@ const Login = (props) => {
     username: ""
   })
 
-  // state = {
-  //   room_name: "",
-  //   password: "",
-  //   username: "",
-  // };
-
   const handleChange = (event) => {
-    setRoom((prev) => {
-      return {
-        ...prev,
-        [event.target.name]: event.target.value
-      }
-    })
-    // setState({ [event.target.name]: event.target.value });
+    setRoom({...room,[event.target.name]: event.target.value})
   };
 
   const handleSubmit = (event) => {
@@ -86,7 +74,7 @@ const Login = (props) => {
         <input
           className="form-input"
           name="username"
-          value={this.state.username}
+          value={room.username}
           onChange={handleChange}
         />
         <br></br>
