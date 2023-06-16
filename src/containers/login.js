@@ -10,8 +10,17 @@ const Login = (props) => {
     username: ""
   })
 
+  // const handleChange = (event) => {
+  //   // setRoom({...room,[event.target.name]: event.target.value})
+  // };
+  //keeping this as reference for another way to update state...not sure about potential side effects of event.persist below
+
   const handleChange = (event) => {
-    setRoom({...room,[event.target.name]: event.target.value})
+    event.persist()
+    setRoom((prev) => ({
+      ...prev,
+      [event.target.name]: event.target.value
+    }));
   };
 
   const handleSubmit = (event) => {
