@@ -1,19 +1,23 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import icebreakersv8 from "../logo/icebreakersv8.png";
 import { Container, Row, Col } from "react-bootstrap";
 
-export class createRoom extends Component {
-  state = {
+const CreateRoom = (props) => {
+  const [room, setRoom] = useState({
     room_name: "",
     password: "",
     username: "",
+  });
+
+  const handleChange = (event) => {
+    event.persist();
+    setRoom((prev) => ({
+      ...prev,
+      [event.target.name]: event.target.value,
+    }));
   };
 
-  handleChange = (event) => {
-    this.setState({ [event.target.name]: event.target.value });
-  };
-
-  handleSubmit = (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
     const reqObj = {
       method: "POST",
@@ -21,35 +25,36 @@ export class createRoom extends Component {
         "Content-Type": "application/json",
         Accept: "application/json",
       },
-      body: JSON.stringify({ room: this.state }),
+      body: JSON.stringify({ room: room }),
     };
     fetch("http://localhost:3000/rooms", reqObj)
       .then((resp) => resp.json())
       .then((resp) => {
         localStorage.setItem("token", resp.jwt);
-        this.props.setCreateRoom(
+        props.setCreateRoom(
           resp.user,
           resp.room.room_name,
           resp.room.host_id,
           resp.room.host_name
         );
-        this.props.history.push(`/room/${resp.room.id}`);
+        props.history.push(`/room/${resp.room.id}`);
       });
-    this.setState({ room_name: "", password: "", username: "" });
+    setRoom({ room_name: "", password: "", username: "" });
   };
 
-  renderForm = () => {
+  const renderForm = () => {
     return (
-      <form className="create-room-form" onSubmit={this.handleSubmit}>
+      <form className="create-room-form" onSubmit={handleSubmit}>
         <label className="form-label">Create Room Name</label>
         <br></br>
         <input
           className="form-input"
           id="rname"
           name="room_name"
-          value={this.state.room_name}
-          onChange={this.handleChange}
-        />{" "}
+          value={room.room_name}
+          onChange={handleChange}
+        />
+        {/* {" "} not sure why this was here, but keeping it just in case...*/}
         <br></br>
         <label className="form-label">Create Password</label>
         <br></br>
@@ -58,8 +63,8 @@ export class createRoom extends Component {
           id="pword"
           name="password"
           type="password"
-          value={this.state.password}
-          onChange={this.handleChange}
+          value={room.password}
+          onChange={handleChange}
         />
         <br></br>
         <label className="form-label">Create Player Name</label>
@@ -69,8 +74,8 @@ export class createRoom extends Component {
           id="uname"
           name="username"
           type="text"
-          value={this.state.username}
-          onChange={this.handleChange}
+          value={room.username}
+          onChange={handleChange}
         />
         <br></br>
         <button className="form-btn" type="submit">
@@ -81,26 +86,20 @@ export class createRoom extends Component {
     );
   };
 
-  render() {
-    return (
-      <Container>
-        <Row className="boot-home-logo">
-          <img
-            className="img-fluid"
-            src={icebreakersv8}
-            alt="icebreakers logo"
-          />
-        </Row>
-        <Row>
-          <Col className="col"/>
-          <Col className="max-width-400 col-10 align-self-center">
-            {this.renderForm()}
-          </Col>
-          <Col className="col"/>
-        </Row>
-      </Container>
-    );
-  }
-}
+  return (
+    <Container>
+      <Row className="boot-home-logo">
+        <img className="img-fluid" src={icebreakersv8} alt="icebreakers logo" />
+      </Row>
+      <Row>
+        <Col className="col" />
+        <Col className="max-width-400 col-10 align-self-center">
+          {renderForm()}
+        </Col>
+        <Col className="col" />
+      </Row>
+    </Container>
+  );
+};
 
-export default createRoom;
+export default CreateRoom;
