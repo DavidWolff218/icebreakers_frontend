@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import icebreakersv8 from "../logo/icebreakersv8.png";
 import { Container, Row, Col } from "react-bootstrap";
 
-const home = () => {  
+const Home = () => {  
     return (
       <Container>
         <Row className="boot-home-logo">
@@ -40,6 +40,6 @@ const home = () => {
     );
 }
 
-export default home;
+export default Home;
 
 
