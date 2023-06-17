@@ -19,17 +19,15 @@ const gameText = (props) => {
     //     />
     //   );
     // } else {
-      return (
-        <div>
-          <h3 className="currentPlayer">{player}</h3>
-          <h3 className="currentQuestion">
-            {props.currentQuestion.content}
-          </h3>
-          <br></br>
-          {props.playerButton()}
-          {props.hostButton()}
-        </div>
-      );
+    return (
+      <div>
+        <h3 className="currentPlayer">{player}</h3>
+        <h3 className="currentQuestion">{props.currentQuestion.content}</h3>
+        <br></br>
+        {props.playerButton()}
+        {props.hostButton()}
+      </div>
+    );
     // }
   };
 
@@ -38,10 +36,7 @@ const gameText = (props) => {
   };
 
   const gameText = () => {
-    if (
-      props.reshufflingQuestions &&
-      props.reshufflingUsers === true
-    ) {
+    if (props.reshufflingQuestions && props.reshufflingUsers === true) {
       callReset(props.resetUsersAndQuestionsShuffle);
       return <h3>Reshuffling Questions and Users...</h3>;
     } else if (props.reshufflingUsers === true) {
@@ -55,9 +50,7 @@ const gameText = (props) => {
     }
   };
 
-
-    return <div>{gameText()}</div>;
-  
-}
+  return <div>{gameText()}</div>;
+};
 
 export default gameText;

@@ -1,14 +1,14 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import icebreakersv8 from "../logo/icebreakersv8.png";
 import { Container, Row, Col } from "react-bootstrap";
 
 const Login = (props) => {
-//check for users not fully filling in fields. do we need a minimum
+  //check for users not fully filling in fields. do we need a minimum
   const [room, setRoom] = useState({
     room_name: "",
     password: "",
-    username: ""
-  })
+    username: "",
+  });
 
   // const handleChange = (event) => {
   //   // setRoom({...room,[event.target.name]: event.target.value})
@@ -16,10 +16,10 @@ const Login = (props) => {
   //keeping this as reference for another way to update state...not sure about potential side effects of event.persist below
 
   const handleChange = (event) => {
-    event.persist()
+    event.persist();
     setRoom((prev) => ({
       ...prev,
-      [event.target.name]: event.target.value
+      [event.target.name]: event.target.value,
     }));
   };
 
@@ -31,7 +31,7 @@ const Login = (props) => {
         "Content-Type": "application/json",
         Accept: "application/json",
       },
-      body: JSON.stringify({ room: room}),
+      body: JSON.stringify({ room: room }),
     };
     fetch("http://localhost:3000/", reqObj)
       .then((resp) => resp.json())
@@ -52,8 +52,8 @@ const Login = (props) => {
     setRoom({
       room_name: "",
       password: "",
-      username: ""
-    })
+      username: "",
+    });
   };
 
   const renderForm = () => {
@@ -94,24 +94,20 @@ const Login = (props) => {
     );
   };
 
-    return (
-      <Container>
-        <Row className="boot-home-logo">
-          <img
-            className="img-fluid"
-            src={icebreakersv8}
-            alt="icebreakers logo"
-          />
-        </Row>
-        <Row>
-          <Col className="col"/>
-          <Col className="max-width-400 col-10 align-self-center">
-            {renderForm()}
-          </Col>
-          <Col className="col"/>
-        </Row>
-      </Container>
-    );
-}
+  return (
+    <Container>
+      <Row className="boot-home-logo">
+        <img className="img-fluid" src={icebreakersv8} alt="icebreakers logo" />
+      </Row>
+      <Row>
+        <Col className="col" />
+        <Col className="max-width-400 col-10 align-self-center">
+          {renderForm()}
+        </Col>
+        <Col className="col" />
+      </Row>
+    </Container>
+  );
+};
 
 export default Login;

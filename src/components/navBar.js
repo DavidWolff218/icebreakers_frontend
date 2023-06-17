@@ -3,7 +3,7 @@ import icebreakersv8 from "../logo/icebreakersv8.png";
 import { Row, Col } from "react-bootstrap";
 
 const navBar = (props) => {
-  //Do we need to have this as a function or can it be a variable 
+  //Do we need to have this as a function or can it be a variable
   const logOutBtn = () => {
     if (props.currentUser === props.host) {
       return (

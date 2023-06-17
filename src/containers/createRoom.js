@@ -3,18 +3,17 @@ import icebreakersv8 from "../logo/icebreakersv8.png";
 import { Container, Row, Col } from "react-bootstrap";
 
 const CreateRoom = (props) => {
-
   const [room, setRoom] = useState({
     room_name: "",
     password: "",
     username: "",
-  })
- 
+  });
+
   const handleChange = (event) => {
-    event.persist()
+    event.persist();
     setRoom((prev) => ({
       ...prev,
-      [event.target.name]: event.target.value
+      [event.target.name]: event.target.value,
     }));
   };
 
@@ -55,7 +54,7 @@ const CreateRoom = (props) => {
           value={room.room_name}
           onChange={handleChange}
         />
-        {/* {" "} not sure why this was here, but keeping it just in case...*/ } 
+        {/* {" "} not sure why this was here, but keeping it just in case...*/}
         <br></br>
         <label className="form-label">Create Password</label>
         <br></br>
@@ -87,24 +86,20 @@ const CreateRoom = (props) => {
     );
   };
 
-    return (
-      <Container>
-        <Row className="boot-home-logo">
-          <img
-            className="img-fluid"
-            src={icebreakersv8}
-            alt="icebreakers logo"
-          />
-        </Row>
-        <Row>
-          <Col className="col"/>
-          <Col className="max-width-400 col-10 align-self-center">
-            {renderForm()}
-          </Col>
-          <Col className="col"/>
-        </Row>
-      </Container>
-    );
-}
+  return (
+    <Container>
+      <Row className="boot-home-logo">
+        <img className="img-fluid" src={icebreakersv8} alt="icebreakers logo" />
+      </Row>
+      <Row>
+        <Col className="col" />
+        <Col className="max-width-400 col-10 align-self-center">
+          {renderForm()}
+        </Col>
+        <Col className="col" />
+      </Row>
+    </Container>
+  );
+};
 
 export default CreateRoom;
