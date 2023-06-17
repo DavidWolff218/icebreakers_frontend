@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import "./App.css";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import Login from "./containers/login";
@@ -6,32 +6,29 @@ import Home from "./containers/home";
 import Room from "./containers/room";
 import CreateRoom from "./containers/createRoom";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Container, Row, Col } from 'react-bootstrap'
 
-class App extends React.Component {
-  state = {
+const App = () => {
+  //go through and condense and cleanup code on next pass
+
+  const [gameStarted, setGameStarted] = useState(false)
+  
+  const [roomInfo, setRoomInfo] = useState({
     currentUser: "",
-    hostID: "",
     roomName: "",
-    allUsers: [],
-    gameStarted: false,
-    hostName: "",
+    hostID: "",
+    hostName: ""
+  })
+
+  const startGame = () => {
+    setGameStarted(true)
   };
 
-  startGame = () => {
-    this.setState({
-      gameStarted: true,
-    });
+  const endGame = () => {
+    setGameStarted(false)
   };
 
-  endGame = () => {
-    this.setState({
-      gameStarted: false,
-    });
-  };
-
-  setCreateRoom = (currentUser, roomName, hostID, hostName) => {
-    this.setState({
+  const setCreateRoom = (currentUser, roomName, hostID, hostName) => {
+   setRoomInfo({
       currentUser: currentUser,
       roomName: roomName,
       hostID: hostID,
@@ -39,8 +36,8 @@ class App extends React.Component {
     });
   };
 
-  setLogin = (currentUser, roomName, hostID, hostName) => {
-    this.setState({
+  const setLogin = (currentUser, roomName, hostID, hostName) => {
+    setRoomInfo({
       currentUser: currentUser,
       roomName: roomName,
       hostID: hostID,
@@ -48,7 +45,6 @@ class App extends React.Component {
     });
   };
 
-  render() {
     return (
       <Router>
         <div className="App">
@@ -63,7 +59,7 @@ class App extends React.Component {
             exact
             path="/login"
             render={(routeParams) => {
-              return <Login setLogin={this.setLogin} {...routeParams} />;
+              return <Login setLogin={setLogin} {...routeParams} />;
             }}
           />
           <Route
@@ -72,13 +68,13 @@ class App extends React.Component {
             render={(routeParams) => {
               return (
                 <Room
-                  currentUser={this.state.currentUser}
-                  startGame={this.startGame}
-                  endGame={this.endGame}
-                  gameStarted={this.state.gameStarted}
-                  hostID={this.state.hostID}
-                  roomName={this.state.roomName}
-                  hostName={this.state.hostName}
+                  currentUser={roomInfo.currentUser}
+                  startGame={startGame}
+                  endGame={endGame}
+                  gameStarted={gameStarted}
+                  hostID={roomInfo.hostID}
+                  roomName={roomInfo.roomName}
+                  hostName={roomInfo.hostName}
                   {...routeParams}
                 />
               );
@@ -90,7 +86,7 @@ class App extends React.Component {
             render={(routeParams) => {
               return (
                 <CreateRoom
-                  setCreateRoom={this.setCreateRoom}
+                  setCreateRoom={setCreateRoom}
                   {...routeParams}
                 />
               );
@@ -99,7 +95,6 @@ class App extends React.Component {
         </div>
       </Router>
     );
-  }
 }
 
 export default App;

@@ -3,7 +3,7 @@ import icebreakersv8 from "../logo/icebreakersv8.png";
 import { Container, Row, Col } from "react-bootstrap";
 
 const Login = (props) => {
-
+//check for users not fully filling in fields. do we need a minimum
   const [room, setRoom] = useState({
     room_name: "",
     password: "",
