@@ -1,48 +1,50 @@
-import React from "react";
+import React, {useState} from "react";
 import { ActionCableConsumer } from "@thrash-industries/react-actioncable-provider";
 import AllUsers from "../components/allUsers";
 import GameText from "../components/gameText";
 import NavBar from "../components/navBar";
 import { Row, Col } from "react-bootstrap";
 
-export class room extends React.Component {
-  state = {
-    currentPlayer: "",
-    currentQuestion: "",
-    votingQuestionA: "",
-    votingQuestionB: "",
-    reshufflingUsers: false,
-    reshufflingQuestions: false,
-    allUsers: [],
-    timerRunning: false,
-    timerSeconds: 5,
-    timerIntervalID: "",
-  };
+const Room = (props) => {
 
-  handleReceived = (resp) => {
-    if (this.props.gameStarted === false) {
-      this.props.startGame();
+  const [gameRound, setGameRound] = useState({
+      currentPlayer: "",
+      currentQuestion: {},
+      votingQuestionA: "",
+      votingQuestionB: "",
+      reshufflingUsers: false,
+      reshufflingQuestions: false,
+      allUsers: []
+  })
+  // state = {
+  //   currentPlayer: "",
+  //   currentQuestion: "",
+  //   votingQuestionA: "",
+  //   votingQuestionB: "",
+  //   reshufflingUsers: false,
+  //   reshufflingQuestions: false,
+  //   allUsers: [],
+  //   timerRunning: false,
+  //   timerSeconds: 5,
+  //   timerIntervalID: "",
+  // };
+
+ const handleReceived = (resp) => {
+    if (props.gameStarted === false) {
+      props.startGame();
     }
-    const currentPlayer = resp.currentPlayer;
-    const currentQuestion = resp.currentQuestion;
-    const votingQuestionA = resp.votingQuestionA;
-    const votingQuestionB = resp.votingQuestionB;
-    const reshufflingUsers = resp.reshufflingUsers;
-    const reshufflingQuestions = resp.reshufflingQuestions;
-    const allUsers = resp.allUsers;
-
-    this.setState({
-      currentPlayer: currentPlayer.username,
-      currentQuestion: currentQuestion,
-      votingQuestionA: votingQuestionA,
-      votingQuestionB: votingQuestionB,
-      reshufflingUsers: reshufflingUsers,
-      reshufflingQuestions: reshufflingQuestions,
-      allUsers: allUsers,
+    setGameRound({
+      currentPlayer: resp.currentPlayer.username,
+      currentQuestion: resp.currentQuestion,
+      votingQuestionA: resp.votingQuestionA,
+      votingQuestionB: resp.votingQuestionB,
+      reshufflingUsers: resp.reshufflingUsers,
+      reshufflingQuestions: resp.reshufflingQuestions,
+      allUsers: resp.allUsers,
     });
   };
 
-  handleClick = () => {
+ const handleClick = () => {
     const reqObj = {
       method: "PATCH",
       headers: {
@@ -50,18 +52,18 @@ export class room extends React.Component {
       },
       body: JSON.stringify({
         user: {
-          room: this.props.match.params.id,
-          currentPlayer: this.state.currentPlayer,
+          room: props.match.params.id,
+          currentPlayer: gameRound.currentPlayer,
         },
         question: {
-          id: this.state.currentQuestion.id,
+          id: gameRound.currentQuestion.id,
         },
       }),
     };
     fetch(`http://localhost:3000/users/select/foo`, reqObj);
   };
 
-  handleStartClick = () => {
+  const handleStartClick = () => {
     const reqObj = {
       method: "PATCH",
       headers: {
@@ -69,38 +71,38 @@ export class room extends React.Component {
       },
       body: JSON.stringify({
         user: {
-          room: this.props.match.params.id,
+          room: props.match.params.id,
         },
       }),
     };
     fetch(`http://localhost:3000/users/start/foo`, reqObj);
   };
 
-  handleVote = (vote) => {
-    const reqObj = {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        user: {
-          room: this.props.match.params.id,
-          vote_id: vote,
-          currentPlayer: this.state.currentPlayer,
-        },
-      }),
-    };
-    fetch(`http://localhost:3000/users/voting/foo`, reqObj);
-  };
+//  const handleVote = (vote) => {
+//     const reqObj = {
+//       method: "PATCH",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify({
+//         user: {
+//           room: props.match.params.id,
+//           vote_id: vote,
+//           currentPlayer: gameRound.currentPlayer,
+//         },
+//       }),
+//     };
+//     fetch(`http://localhost:3000/users/voting/foo`, reqObj);
+//   };
 
-  startButton = () => {
+ const startButton = () => {
     if (
-      this.props.gameStarted === false &&
-      this.props.currentUser.id === this.props.hostID
+      props.gameStarted === false &&
+      props.currentUser.id === props.hostID
     ) {
       return (
         <div>
-          <button className="startBtn" onClick={this.handleStartClick}>
+          <button className="startBtn" onClick={handleStartClick}>
             <h3 className="mainBtnText">START GAME</h3>
           </button>
         </div>
@@ -108,10 +110,10 @@ export class room extends React.Component {
     }
   };
 
-  hostButton = () => {
-    if (this.props.currentUser.id === this.props.hostID) {
+  const hostButton = () => {
+    if (props.currentUser.id === props.hostID) {
       return (
-        <button className="MainBtn" onClick={this.handleClick}>
+        <button className="MainBtn" onClick={handleClick}>
           <h3 className="mainBtnText">NEXT QUESTION</h3>
         </button>
       );
@@ -119,13 +121,13 @@ export class room extends React.Component {
       return null;
     }
   };
-
-  playerButton = () => {
-    if (this.props.currentUser.id === this.props.hostID) {
+//can combine these two functions...or maybe not...will look into this more
+ const playerButton = () => {
+    if (props.currentUser.id === props.hostID) {
       return null;
-    } else if (this.props.currentUser.username === this.state.currentPlayer) {
+    } else if (props.currentUser.username === gameRound.currentPlayer) {
       return (
-        <button className="MainBtn" onClick={this.handleClick}>
+        <button className="MainBtn" onClick={handleClick}>
           <h3 className="playerBtnText">NEXT QUESTION</h3>
         </button>
       );
@@ -134,8 +136,8 @@ export class room extends React.Component {
     }
   };
 
-  logoutBtn = () => {
-    let id = this.props.currentUser.id;
+ const logoutBtn = () => {
+    let id = props.currentUser.id;
     const reqObj = {
       method: "DELETE",
       headers: {
@@ -152,12 +154,12 @@ export class room extends React.Component {
       .then((resp) => resp.json())
       .then((user) => {
         localStorage.removeItem("token");
-        this.props.history.push(`/`);
+        props.history.push(`/`);
       });
   };
 
-  endGameBtn = () => {
-    let id = this.props.match.params.id;
+  const endGameBtn = () => {
+    let id = props.match.params.id;
     const reqObj = {
       method: "DELETE",
       headers: {
@@ -173,105 +175,115 @@ export class room extends React.Component {
     fetch(`http://localhost:3000/rooms/${id}`, reqObj)
       .then((resp) => resp.json())
       .then((room) => {
-        this.props.endGame();
+        props.endGame();
         localStorage.removeItem("token");
-        this.props.history.push(`/`);
+        props.history.push(`/`);
       });
   };
 
-  resetUsersAndQuestionsShuffle = () => {
-    this.setState({
+ const resetUsersAndQuestionsShuffle = () => {
+    setGameRound((prev) => ({
+      ...prev,
       reshufflingUsers: false,
       reshufflingQuestions: false,
-    });
+    })
+    );
   };
 
-  resetUsersShuffle = () => {
-    this.setState({
+const  resetUsersShuffle = () => {
+    setGameRound((prev) => ({
+      ...prev,
       reshufflingUsers: false,
-    });
+    })
+    );
   };
 
-  resetQuestionsShuffle = () => {
-    this.setState({
-      reshufflingQuestions: false,
-    });
+const  resetQuestionsShuffle = () => {
+  setGameRound((prev) => ({
+    ...prev,
+    reshufflingQuestions: false,
+  })
+  );
   };
 
-  runTimer = () => {
-    const intervalID = setInterval(() => {
-      if (this.state.timerSeconds > 0) {
-        this.setState({
-          timerSeconds: this.state.timerSeconds - 1,
-        });
-        this.setState({
-          timerIntervalID: intervalID,
-        });
-      } else {
-        this.resetTimer();
-      }
-    }, 1000);
-  };
+  //These three functions are all part of the voting feature, will implement again in future
 
-  resetTimer = () => {
-    clearInterval(this.state.timerIntervalID);
-    if (this.state.timerSeconds === 0) {
-      this.timerSelect();
-      this.setState({
-        // timerRunning: false,
-        timerSeconds: 20,
-      });
-    } else {
-      this.setState({
-        // timerRunning: false,
-        timerSeconds: 20,
-      });
-    }
-  };
+// const runTimer = () => {
+//     const intervalID = setInterval(() => {
+//       if (this.state.timerSeconds > 0) {
+//         this.setState({
+//           timerSeconds: this.state.timerSeconds - 1,
+//         });
+//         this.setState({
+//           timerIntervalID: intervalID,
+//         });
+//       } else {
+//         this.resetTimer();
+//       }
+//     }, 1000);
+//   };
 
-  timerSelect = () => {
-    console.log("timer");
-    const reqObj = {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        user: {
-          room: this.props.match.params.id,
-          currentPlayer: this.state.currentPlayer,
-        },
-      }),
-    };
-    fetch(`http://localhost:3000/users/voting_timer/foo`, reqObj);
-  };
+// const  resetTimer = () => {
+//     clearInterval(this.state.timerIntervalID);
+//     if (this.state.timerSeconds === 0) {
+//       this.timerSelect();
+//       this.setState({
+//         // timerRunning: false,
+//         timerSeconds: 20,
+//       });
+//     } else {
+//       this.setState({
+//         // timerRunning: false,
+//         timerSeconds: 20,
+//       });
+//     }
+//   };
 
-  screenText = () => {
-    if (this.props.gameStarted === true) {
+// const  timerSelect = () => {
+//     console.log("timer");
+//     const reqObj = {
+//       method: "PATCH",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify({
+//         user: {
+//           room: this.props.match.params.id,
+//           currentPlayer: this.state.currentPlayer,
+//         },
+//       }),
+//     };
+//     fetch(`http://localhost:3000/users/voting_timer/foo`, reqObj);
+//   };
+
+const  screenText = () => {
+  console.log(props)
+    if (props.gameStarted === true) {
       return (
+        
         <GameText
-          currentPlayer={this.state.currentPlayer}
-          currentQuestion={this.state.currentQuestion}
-          votingQuestionA={this.state.votingQuestionA}
-          votingQuestionB={this.state.votingQuestionB}
-          reshufflingUsers={this.state.reshufflingUsers}
-          reshufflingQuestions={this.state.reshufflingQuestions}
-          timerRunning={this.state.timerRunning}
-          timerSeconds={this.state.timerSeconds}
-          resetUsersShuffle={this.resetUsersShuffle}
-          resetQuestionsShuffle={this.resetQuestionsShuffle}
-          resetUsersAndQuestionsShuffle={this.resetUsersAndQuestionsShuffle}
-          playerButton={this.playerButton}
-          hostButton={this.hostButton}
-          handleVote={this.handleVote}
-          resetTimer={this.resetTimer}
-          runTimer={this.runTimer}
+          currentPlayer={gameRound.currentPlayer}
+          currentQuestion={gameRound.currentQuestion}
+          votingQuestionA={gameRound.votingQuestionA}
+          votingQuestionB={gameRound.votingQuestionB}
+          reshufflingUsers={gameRound.reshufflingUsers}
+          reshufflingQuestions={gameRound.reshufflingQuestions}
+          // timerRunning={this.state.timerRunning}
+          // timerSeconds={this.state.timerSeconds}
+          resetUsersShuffle={resetUsersShuffle}
+          resetQuestionsShuffle={resetQuestionsShuffle}
+          resetUsersAndQuestionsShuffle={resetUsersAndQuestionsShuffle}
+          playerButton={playerButton}
+          hostButton={hostButton}
+          // handleVote={this.handleVote}
+          // resetTimer={this.resetTimer}
+          // runTimer={this.runTimer}
         />
       );
     }
     if (
-      this.props.gameStarted === false &&
-      this.props.currentUser.id === this.props.hostID
+      props.gameStarted === false &&
+      props.currentUser.id === props.hostID
     ) {
       return (
         <h2 className="welcomeTextHost">
@@ -279,52 +291,50 @@ export class room extends React.Component {
           start the game whenever your party is ready!
         </h2>
       );
-    } else if (this.props.gameStarted === false) {
+    } else if (props.gameStarted === false) {
       return (
         <h2 className="welcomeTextUser">
           The host,{" "}
-          <span className="welcomeTextUserSpan">{this.props.hostName}</span>,
+          <span className="welcomeTextUserSpan">{props.hostName}</span>,
           will start the game soon!
         </h2>
       );
     }
   };
 
-  render() {
     return (
       <div>
         <NavBar
-          room={this.props.roomName}
-          logoutBtn={this.logoutBtn}
-          endGameBtn={this.endGameBtn}
-          currentUser={this.props.currentUser.id}
-          host={this.props.hostID}
-          player={this.props.currentUser.username}
+          room={props.roomName}
+          logoutBtn={logoutBtn}
+          endGameBtn={endGameBtn}
+          currentUser={props.currentUser.id}
+          host={props.hostID}
+          player={props.currentUser.username}
         />
 
         <br></br>
         <AllUsers
-          users={this.state.allUsers}
-          gameStarted={this.props.gameStarted}
+          users={gameRound.allUsers}
+          gameStarted={props.gameStarted}
         />
         <ActionCableConsumer
           channel={{
             channel: "UsersChannel",
-            room: this.props.match.params.id,
+            room: props.match.params.id,
           }}
-          onReceived={this.handleReceived}
+          onReceived={handleReceived}
         >
           <br></br>
           <Col className="align-self-center">
             <Row className="seventy-five-row-seperator" />
-            {this.screenText()}
+            {screenText()}
             <Row className="seventy-five-row-seperator" />
-            {this.startButton()}
+            {startButton()}
           </Col>
         </ActionCableConsumer>
       </div>
     );
-  }
 }
 
-export default room;
+export default Room;
