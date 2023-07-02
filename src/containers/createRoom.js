@@ -10,8 +10,9 @@ const CreateRoom = (props) => {
   });
 
   const handleChange = (event) => {
-    event.persist();
-    setRoom((prev) => ({
+    event.persist()
+    setRoom((prev) => 
+    ({
       ...prev,
       [event.target.name]: event.target.value,
     }));
