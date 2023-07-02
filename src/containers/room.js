@@ -173,7 +173,7 @@ const Room = (props) => {
         props.history.push(`/`);
       });
   };
-//combine these three functions
+
  const resetUsersAndQuestionsShuffle = () => {
     setGameRound((prev) => ({
       ...prev,
