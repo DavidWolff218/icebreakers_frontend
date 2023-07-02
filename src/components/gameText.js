@@ -25,7 +25,6 @@ const gameText = (props) => {
         <h3 className="currentQuestion">{props.currentQuestion.content}</h3>
         <br></br>
         {props.playerButton()}
-        {props.hostButton()}
       </div>
     );
     // }

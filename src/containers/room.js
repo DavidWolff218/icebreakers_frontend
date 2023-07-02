@@ -110,21 +110,14 @@ const Room = (props) => {
     }
   };
 
-  const hostButton = () => {
-    if (props.currentUser.id === props.hostID) {
-      return (
-        <button className="MainBtn" onClick={handleClick}>
-          <h3 className="mainBtnText">NEXT QUESTION</h3>
-        </button>
-      );
-    } else {
-      return null;
-    }
-  };
-//can combine these two functions...or maybe not...will look into this more
  const playerButton = () => {
-    if (props.currentUser.id === props.hostID) {
-      return null;
+  //use to have this function seperated into two for the host and player. host will always get button
+  if (props.currentUser.id === props.hostID) {
+    return (
+      <button className="MainBtn" onClick={handleClick}>
+        <h3 className="mainBtnText">NEXT QUESTION</h3>
+      </button>
+    );
     } else if (props.currentUser.username === gameRound.currentPlayer) {
       return (
         <button className="MainBtn" onClick={handleClick}>
@@ -180,7 +173,7 @@ const Room = (props) => {
         props.history.push(`/`);
       });
   };
-
+//combine these three functions
  const resetUsersAndQuestionsShuffle = () => {
     setGameRound((prev) => ({
       ...prev,
@@ -274,7 +267,6 @@ const  screenText = () => {
           resetQuestionsShuffle={resetQuestionsShuffle}
           resetUsersAndQuestionsShuffle={resetUsersAndQuestionsShuffle}
           playerButton={playerButton}
-          hostButton={hostButton}
           // handleVote={this.handleVote}
           // resetTimer={this.resetTimer}
           // runTimer={this.runTimer}
