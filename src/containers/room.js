@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { ActionCableConsumer } from "@thrash-industries/react-actioncable-provider";
 import AllUsers from "../components/allUsers";
 import GameText from "../components/gameText";
@@ -7,16 +7,15 @@ import { Row, Col } from "react-bootstrap";
 import WaitingRoom from "../components/waitingRoom";
 
 const Room = (props) => {
-
   const [gameRound, setGameRound] = useState({
-      currentPlayer: "",
-      currentQuestion: {},
-      votingQuestionA: "",
-      votingQuestionB: "",
-      reshufflingUsers: false,
-      reshufflingQuestions: false,
-      allUsers: []
-  })
+    currentPlayer: "",
+    currentQuestion: {},
+    votingQuestionA: "",
+    votingQuestionB: "",
+    reshufflingUsers: false,
+    reshufflingQuestions: false,
+    allUsers: [],
+  });
   // state = {
   //   currentPlayer: "",
   //   currentQuestion: "",
@@ -30,7 +29,8 @@ const Room = (props) => {
   //   timerIntervalID: "",
   // };
 
- const handleReceived = (resp) => {
+  const handleReceived = (resp) => {
+    console.log("resp", resp)
     if (!props.gameStarted) {
       props.startGame();
     }
@@ -45,7 +45,7 @@ const Room = (props) => {
     });
   };
 
- const handleClick = () => {
+  const handleClick = () => {
     const reqObj = {
       method: "PATCH",
       headers: {
@@ -79,31 +79,31 @@ const Room = (props) => {
     fetch(`http://localhost:3000/users/start/foo`, reqObj);
   };
 
-//  const handleVote = (vote) => {
-//     const reqObj = {
-//       method: "PATCH",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify({
-//         user: {
-//           room: props.match.params.id,
-//           vote_id: vote,
-//           currentPlayer: gameRound.currentPlayer,
-//         },
-//       }),
-//     };
-//     fetch(`http://localhost:3000/users/voting/foo`, reqObj);
-//   };
+  //  const handleVote = (vote) => {
+  //     const reqObj = {
+  //       method: "PATCH",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({
+  //         user: {
+  //           room: props.match.params.id,
+  //           vote_id: vote,
+  //           currentPlayer: gameRound.currentPlayer,
+  //         },
+  //       }),
+  //     };
+  //     fetch(`http://localhost:3000/users/voting/foo`, reqObj);
+  //   };
 
- const playerButton = () => {
-  //use to have this function seperated into two for the host and player. host will always get button
-  if (props.currentUser.id === props.hostID) {
-    return (
-      <button className="MainBtn" onClick={handleClick}>
-        <h3 className="mainBtnText">NEXT QUESTION</h3>
-      </button>
-    );
+  const playerButton = () => {
+    //use to have this function seperated into two for the host and player. host will always get button
+    if (props.currentUser.id === props.hostID) {
+      return (
+        <button className="MainBtn" onClick={handleClick}>
+          <h3 className="mainBtnText">NEXT QUESTION</h3>
+        </button>
+      );
     } else if (props.currentUser.username === gameRound.currentPlayer) {
       return (
         <button className="MainBtn" onClick={handleClick}>
@@ -115,7 +115,7 @@ const Room = (props) => {
     }
   };
 
- const logoutBtn = () => {
+  const logoutBtn = () => {
     let id = props.currentUser.id;
     const reqObj = {
       method: "DELETE",
@@ -160,136 +160,150 @@ const Room = (props) => {
       });
   };
 
- const resetUsersAndQuestionsShuffle = () => {
+  const resetUsersAndQuestionsShuffle = () => {
     setGameRound((prev) => ({
       ...prev,
       reshufflingUsers: false,
       reshufflingQuestions: false,
-    })
-    );
+    }));
   };
 
-const  resetUsersShuffle = () => {
+  const resetUsersShuffle = () => {
     setGameRound((prev) => ({
       ...prev,
       reshufflingUsers: false,
-    })
-    );
+    }));
   };
 
-const  resetQuestionsShuffle = () => {
-  setGameRound((prev) => ({
-    ...prev,
-    reshufflingQuestions: false,
-  })
-  );
+  const resetQuestionsShuffle = () => {
+    setGameRound((prev) => ({
+      ...prev,
+      reshufflingQuestions: false,
+    }));
   };
 
   //These three functions are all part of the voting feature, will implement again in future
 
-// const runTimer = () => {
-//     const intervalID = setInterval(() => {
-//       if (this.state.timerSeconds > 0) {
-//         this.setState({
-//           timerSeconds: this.state.timerSeconds - 1,
-//         });
-//         this.setState({
-//           timerIntervalID: intervalID,
-//         });
-//       } else {
-//         this.resetTimer();
-//       }
-//     }, 1000);
-//   };
+  // const runTimer = () => {
+  //     const intervalID = setInterval(() => {
+  //       if (this.state.timerSeconds > 0) {
+  //         this.setState({
+  //           timerSeconds: this.state.timerSeconds - 1,
+  //         });
+  //         this.setState({
+  //           timerIntervalID: intervalID,
+  //         });
+  //       } else {
+  //         this.resetTimer();
+  //       }
+  //     }, 1000);
+  //   };
 
-// const  resetTimer = () => {
-//     clearInterval(this.state.timerIntervalID);
-//     if (this.state.timerSeconds === 0) {
-//       this.timerSelect();
-//       this.setState({
-//         // timerRunning: false,
-//         timerSeconds: 20,
-//       });
-//     } else {
-//       this.setState({
-//         // timerRunning: false,
-//         timerSeconds: 20,
-//       });
-//     }
-//   };
+  // const  resetTimer = () => {
+  //     clearInterval(this.state.timerIntervalID);
+  //     if (this.state.timerSeconds === 0) {
+  //       this.timerSelect();
+  //       this.setState({
+  //         // timerRunning: false,
+  //         timerSeconds: 20,
+  //       });
+  //     } else {
+  //       this.setState({
+  //         // timerRunning: false,
+  //         timerSeconds: 20,
+  //       });
+  //     }
+  //   };
 
-// const  timerSelect = () => {
-//     console.log("timer");
-//     const reqObj = {
-//       method: "PATCH",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify({
-//         user: {
-//           room: this.props.match.params.id,
-//           currentPlayer: this.state.currentPlayer,
-//         },
-//       }),
-//     };
-//     fetch(`http://localhost:3000/users/voting_timer/foo`, reqObj);
-//   };
+  // const  timerSelect = () => {
+  //     console.log("timer");
+  //     const reqObj = {
+  //       method: "PATCH",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({
+  //         user: {
+  //           room: this.props.match.params.id,
+  //           currentPlayer: this.state.currentPlayer,
+  //         },
+  //       }),
+  //     };
+  //     fetch(`http://localhost:3000/users/voting_timer/foo`, reqObj);
+  //   };
 
-const  screenText = () => {
-      return ( 
-        <GameText
-          currentPlayer={gameRound.currentPlayer}
-          currentQuestion={gameRound.currentQuestion}
-          votingQuestionA={gameRound.votingQuestionA}
-          votingQuestionB={gameRound.votingQuestionB}
-          reshufflingUsers={gameRound.reshufflingUsers}
-          reshufflingQuestions={gameRound.reshufflingQuestions}
-          // timerRunning={this.state.timerRunning}
-          // timerSeconds={this.state.timerSeconds}
-          resetUsersShuffle={resetUsersShuffle}
-          resetQuestionsShuffle={resetQuestionsShuffle}
-          resetUsersAndQuestionsShuffle={resetUsersAndQuestionsShuffle}
-          playerButton={playerButton}
-          // handleVote={this.handleVote}
-          // resetTimer={this.resetTimer}
-          // runTimer={this.runTimer}
-        />
-      );
+  const screenText = () => {
+    return (
+      <GameText
+        currentPlayer={gameRound.currentPlayer}
+        currentQuestion={gameRound.currentQuestion}
+        votingQuestionA={gameRound.votingQuestionA}
+        votingQuestionB={gameRound.votingQuestionB}
+        reshufflingUsers={gameRound.reshufflingUsers}
+        reshufflingQuestions={gameRound.reshufflingQuestions}
+        // timerRunning={this.state.timerRunning}
+        // timerSeconds={this.state.timerSeconds}
+        resetUsersShuffle={resetUsersShuffle}
+        resetQuestionsShuffle={resetQuestionsShuffle}
+        resetUsersAndQuestionsShuffle={resetUsersAndQuestionsShuffle}
+        playerButton={playerButton}
+        // handleVote={this.handleVote}
+        // resetTimer={this.resetTimer}
+        // runTimer={this.runTimer}
+      />
+    );
   };
 
-    return (
-      <div>
-        <NavBar
-          room={props.roomName}
-          logoutBtn={logoutBtn}
-          endGameBtn={endGameBtn}
-          currentUser={props.currentUser.id}
-          host={props.hostID}
-          player={props.currentUser.username}
-        />
+  return (
+    <div>
+      <NavBar
+        room={props.roomName}
+        logoutBtn={logoutBtn}
+        endGameBtn={endGameBtn}
+        currentUser={props.currentUser.id}
+        host={props.hostID}
+        player={props.currentUser.username}
+      />
 
-        <br></br>
+      <br></br>
+     
+      {/* //for the active game window players, logic now in room since reusing allUsers component in waiting room   */}
+     
+        {/* moved allusers and waiting room to inside actioncableconsumer...not sure if this has any side effects */}
+         {props.gameStarted ? (
         <AllUsers
+          windowText={"Players"}
           users={gameRound.allUsers}
-          gameStarted={props.gameStarted}
         />
-        <ActionCableConsumer
-          channel={{
-            channel: "UsersChannel",
-            room: props.match.params.id,
-          }}
-          onReceived={handleReceived}
-        >
-          <br></br>
-          <Col className="align-self-center">
-            <Row className="seventy-five-row-seperator" />
-            {props.gameStarted ? screenText() : <WaitingRoom hostID={props.hostID} hostName={props.hostName} currentUserId={props.currentUser.id} handleStartClick={handleStartClick}/>}
-            <Row className="seventy-five-row-seperator" />
-            {/* this ^^^ kept after removing startbutton from here to keep css in order */}
-          </Col>
-        </ActionCableConsumer>
-      </div>
-    );
-}
+      ) : null}
+       <ActionCableConsumer
+        channel={{
+          channel: "UsersChannel",
+          room: props.match.params.id,
+        }}
+        onReceived={handleReceived}
+      >
+        <br></br>
+        <Col className="align-self-center">
+          <Row className="seventy-five-row-seperator" />
+          {/* this displays the gameplay text (questions, players, button etc) or the waiting room */}
+          {props.gameStarted ? (
+            screenText()
+          ) : (
+            <WaitingRoom
+              hostID={props.hostID}
+              hostName={props.hostName}
+              currentUserId={props.currentUser.id}
+              handleStartClick={handleStartClick}
+              // users={gameRound.allUsers}
+            />
+          )}
+          <Row className="seventy-five-row-seperator" />
+          {/* this ^^^ kept after removing startbutton from here to keep css in order */}
+        </Col>
+      </ActionCableConsumer>
+    </div>
+  );
+};
 
 export default Room;
