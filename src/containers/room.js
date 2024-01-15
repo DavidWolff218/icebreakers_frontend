@@ -31,7 +31,7 @@ const Room = (props) => {
   // };
 
  const handleReceived = (resp) => {
-    if (props.gameStarted === false) {
+    if (!props.gameStarted) {
       props.startGame();
     }
     setGameRound({

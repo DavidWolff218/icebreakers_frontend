@@ -20,7 +20,7 @@ const allUsers = (props) => {
   };
 
   const renderBox = () => {
-    if (props.gameStarted === false) {
+    if (!props.gameStarted) {
       return null;
     } else {
       return (

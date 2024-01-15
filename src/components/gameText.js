@@ -35,13 +35,13 @@ const gameText = (props) => {
   };
 
   const gameText = () => {
-    if (props.reshufflingQuestions && props.reshufflingUsers === true) {
+    if (props.reshufflingQuestions && props.reshufflingUsers) {
       callReset(props.resetUsersAndQuestionsShuffle);
       return <h3>Reshuffling Questions and Users...</h3>;
-    } else if (props.reshufflingUsers === true) {
+    } else if (props.reshufflingUsers) {
       callReset(props.resetUsersShuffle);
       return <h3>Reshuffling Users...</h3>;
-    } else if (props.reshufflingQuestions === true) {
+    } else if (props.reshufflingQuestions) {
       callReset(props.resetQuestionsShuffle);
       return <h3>Reshuffling Questions...</h3>;
     } else {
