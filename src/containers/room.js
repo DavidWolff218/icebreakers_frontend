@@ -96,10 +96,6 @@ const Room = (props) => {
 //   };
 
  const startButton = () => {
-    if (
-      props.gameStarted === false &&
-      props.currentUser.id === props.hostID
-    ) {
       return (
         <div>
           <button className="startBtn" onClick={handleStartClick}>
@@ -107,7 +103,6 @@ const Room = (props) => {
           </button>
         </div>
       );
-    }
   };
 
  const playerButton = () => {
@@ -281,7 +276,10 @@ const  screenText = () => {
         <h2 className="welcomeTextHost">
           As the <span className="welcomeTextHostSpan">host</span>, you can
           start the game whenever your party is ready!
+          <Row className="seventy-five-row-seperator" />
+          {startButton()}
         </h2>
+        
       );
     } else if (props.gameStarted === false) {
       return (
@@ -322,7 +320,7 @@ const  screenText = () => {
             <Row className="seventy-five-row-seperator" />
             {screenText()}
             <Row className="seventy-five-row-seperator" />
-            {startButton()}
+            {/* this ^^^ kept after removing startbutton from here to keep css in order */}
           </Col>
         </ActionCableConsumer>
       </div>
