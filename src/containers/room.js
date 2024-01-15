@@ -4,6 +4,7 @@ import AllUsers from "../components/allUsers";
 import GameText from "../components/gameText";
 import NavBar from "../components/navBar";
 import { Row, Col } from "react-bootstrap";
+import WaitingRoom from "../components/waitingRoom";
 
 const Room = (props) => {
 
@@ -94,16 +95,6 @@ const Room = (props) => {
 //     };
 //     fetch(`http://localhost:3000/users/voting/foo`, reqObj);
 //   };
-
- const startButton = () => {
-      return (
-        <div>
-          <button className="startBtn" onClick={handleStartClick}>
-            <h3 className="mainBtnText">START GAME</h3>
-          </button>
-        </div>
-      );
-  };
 
  const playerButton = () => {
   //use to have this function seperated into two for the host and player. host will always get button
@@ -245,10 +236,7 @@ const  resetQuestionsShuffle = () => {
 //   };
 
 const  screenText = () => {
-  console.log(props)
-    if (props.gameStarted === true) {
-      return (
-        
+      return ( 
         <GameText
           currentPlayer={gameRound.currentPlayer}
           currentQuestion={gameRound.currentQuestion}
@@ -267,29 +255,6 @@ const  screenText = () => {
           // runTimer={this.runTimer}
         />
       );
-    }
-    if (
-      props.gameStarted === false &&
-      props.currentUser.id === props.hostID
-    ) {
-      return (
-        <h2 className="welcomeTextHost">
-          As the <span className="welcomeTextHostSpan">host</span>, you can
-          start the game whenever your party is ready!
-          <Row className="seventy-five-row-seperator" />
-          {startButton()}
-        </h2>
-        
-      );
-    } else if (props.gameStarted === false) {
-      return (
-        <h2 className="welcomeTextUser">
-          The host,{" "}
-          <span className="welcomeTextUserSpan">{props.hostName}</span>,
-          will start the game soon!
-        </h2>
-      );
-    }
   };
 
     return (
@@ -318,7 +283,7 @@ const  screenText = () => {
           <br></br>
           <Col className="align-self-center">
             <Row className="seventy-five-row-seperator" />
-            {screenText()}
+            {props.gameStarted ? screenText() : <WaitingRoom hostID={props.hostID} hostName={props.hostName} currentUserId={props.currentUser.id} handleStartClick={handleStartClick}/>}
             <Row className="seventy-five-row-seperator" />
             {/* this ^^^ kept after removing startbutton from here to keep css in order */}
           </Col>
