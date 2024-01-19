@@ -8,8 +8,7 @@ import CreateRoom from "./containers/createRoom";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const App = () => {
-  //go through and condense and cleanup code on next pass
-
+ 
   const [gameStarted, setGameStarted] = useState(false);
 
   const [roomInfo, setRoomInfo] = useState({

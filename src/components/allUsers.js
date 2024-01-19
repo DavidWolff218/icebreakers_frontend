@@ -20,18 +20,14 @@ const allUsers = (props) => {
   };
 
   const renderBox = () => {
-    if (props.gameStarted === false) {
-      return null;
-    } else {
       return (
         <div className="allUsers">
           <h3>
-            <span className="allUsersTitle">Players</span>
+            <span className="allUsersTitle">{props.windowText}</span>
           </h3>
           <div className="allUsersList">{renderAllUsers()}</div>
         </div>
       );
-    }
   };
 
   return <div>{renderBox()}</div>;
