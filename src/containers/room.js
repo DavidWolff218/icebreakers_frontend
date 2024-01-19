@@ -15,24 +15,17 @@ const Room = (props) => {
     reshufflingUsers: false,
     reshufflingQuestions: false,
     allUsers: [],
+    //   timerRunning: false,
+    //   timerSeconds: 5,
+    //   timerIntervalID: "",
+    // ^^ to be used for voting feature
   });
-  // state = {
-  //   currentPlayer: "",
-  //   currentQuestion: "",
-  //   votingQuestionA: "",
-  //   votingQuestionB: "",
-  //   reshufflingUsers: false,
-  //   reshufflingQuestions: false,
-  //   allUsers: [],
-  //   timerRunning: false,
-  //   timerSeconds: 5,
-  //   timerIntervalID: "",
-  // };
-
+ 
   const handleReceived = (resp) => {
     console.log("resp", resp)
     if (!props.gameStarted) {
       props.startGame();
+      // ^^ need to investigate this further and what triggers start of game and why
     }
     setGameRound({
       currentPlayer: resp.currentPlayer.username,
@@ -42,10 +35,11 @@ const Room = (props) => {
       reshufflingUsers: resp.reshufflingUsers,
       reshufflingQuestions: resp.reshufflingQuestions,
       allUsers: resp.allUsers,
+      // add voting timer stuff here 
     });
   };
 
-  const handleClick = () => {
+  const handleNextClick = () => {
     const reqObj = {
       method: "PATCH",
       headers: {
@@ -100,13 +94,13 @@ const Room = (props) => {
     //use to have this function seperated into two for the host and player. host will always get button
     if (props.currentUser.id === props.hostID) {
       return (
-        <button className="MainBtn" onClick={handleClick}>
+        <button className="MainBtn" onClick={handleNextClick}>
           <h3 className="mainBtnText">NEXT QUESTION</h3>
         </button>
       );
     } else if (props.currentUser.username === gameRound.currentPlayer) {
       return (
-        <button className="MainBtn" onClick={handleClick}>
+        <button className="MainBtn" onClick={handleNextClick}>
           <h3 className="playerBtnText">NEXT QUESTION</h3>
         </button>
       );
@@ -181,56 +175,6 @@ const Room = (props) => {
       reshufflingQuestions: false,
     }));
   };
-
-  //These three functions are all part of the voting feature, will implement again in future
-
-  // const runTimer = () => {
-  //     const intervalID = setInterval(() => {
-  //       if (this.state.timerSeconds > 0) {
-  //         this.setState({
-  //           timerSeconds: this.state.timerSeconds - 1,
-  //         });
-  //         this.setState({
-  //           timerIntervalID: intervalID,
-  //         });
-  //       } else {
-  //         this.resetTimer();
-  //       }
-  //     }, 1000);
-  //   };
-
-  // const  resetTimer = () => {
-  //     clearInterval(this.state.timerIntervalID);
-  //     if (this.state.timerSeconds === 0) {
-  //       this.timerSelect();
-  //       this.setState({
-  //         // timerRunning: false,
-  //         timerSeconds: 20,
-  //       });
-  //     } else {
-  //       this.setState({
-  //         // timerRunning: false,
-  //         timerSeconds: 20,
-  //       });
-  //     }
-  //   };
-
-  // const  timerSelect = () => {
-  //     console.log("timer");
-  //     const reqObj = {
-  //       method: "PATCH",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({
-  //         user: {
-  //           room: this.props.match.params.id,
-  //           currentPlayer: this.state.currentPlayer,
-  //         },
-  //       }),
-  //     };
-  //     fetch(`http://localhost:3000/users/voting_timer/foo`, reqObj);
-  //   };
 
   const screenText = () => {
     return (
