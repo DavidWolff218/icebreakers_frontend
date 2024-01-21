@@ -9,7 +9,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 const App = () => {
  
-  const [gameStarted, setGameStarted] = useState(false);
+  // const [gameStarted, setGameStarted] = useState(false);
 
   const [roomInfo, setRoomInfo] = useState({
     currentUser: "",
@@ -18,13 +18,13 @@ const App = () => {
     hostName: "",
   });
 
-  const startGame = () => {
-    setGameStarted(true);
-  };
+  // const startGame = () => {
+  //   setGameStarted(true);
+  // };
 
-  const endGame = () => {
-    setGameStarted(false);
-  };
+  // const endGame = () => {
+  //   setGameStarted(false);
+  // };
 
   const setCreateRoom = (currentUser, roomName, hostID, hostName) => {
     setRoomInfo({
@@ -68,9 +68,9 @@ const App = () => {
             return (
               <Room
                 currentUser={roomInfo.currentUser}
-                startGame={startGame}
-                endGame={endGame}
-                gameStarted={gameStarted}
+                // startGame={startGame}
+                // endGame={endGame}
+                // gameStarted={gameStarted}
                 hostID={roomInfo.hostID}
                 roomName={roomInfo.roomName}
                 hostName={roomInfo.hostName}

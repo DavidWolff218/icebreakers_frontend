@@ -7,6 +7,9 @@ import { Row, Col } from "react-bootstrap";
 import WaitingRoom from "../components/waitingRoom";
 
 const Room = (props) => {
+
+  const [gameStarted, setGameStarted] = useState(false);
+
   const [gameRound, setGameRound] = useState({
     currentPlayer: "",
     currentQuestion: {},
@@ -21,6 +24,15 @@ const Room = (props) => {
     // ^^ to be used for voting feature
   });
  
+  const startGame = () => {
+    setGameStarted(true);
+  };
+
+  const endGame = () => {
+    setGameStarted(false);
+  };
+
+
   const handleReceived = (resp) => {
     // console.log("resp", resp)
     if (!resp.room.game_started) {
@@ -31,9 +43,9 @@ const Room = (props) => {
       return
     }
     //can recieve from backend the users when a new one is made for lobby. problem in logic as game shouldnt start. need to rework
-     else if (!props.gameStarted && resp.room.game_started) {
+     else if (!gameStarted && resp.room.game_started) {
       console.log("2")
-      props.startGame();
+      startGame();
       // ^^ need to investigate this further and what triggers start of game and why
     }
     setGameRound({
@@ -157,7 +169,7 @@ const Room = (props) => {
     fetch(`http://localhost:3000/rooms/${id}`, reqObj)
       .then((resp) => resp.json())
       .then((room) => {
-        props.endGame();
+        endGame();
         localStorage.removeItem("token");
         props.history.push(`/`);
       });
@@ -223,7 +235,7 @@ const Room = (props) => {
       {/* //for the active game window players, logic now in room since reusing allUsers component in waiting room   */}
      
         {/* moved allusers and waiting room to inside actioncableconsumer...not sure if this has any side effects */}
-         {props.gameStarted ? (
+         {gameStarted ? (
         <AllUsers
           windowText={"Players"}
           users={gameRound.allUsers}
@@ -240,7 +252,7 @@ const Room = (props) => {
         <Col className="align-self-center">
           <Row className="seventy-five-row-seperator" />
           {/* this displays the gameplay text (questions, players, button etc) or the waiting room */}
-          {props.gameStarted ? (
+          {gameStarted ? (
             screenText()
           ) : (
             <WaitingRoom
