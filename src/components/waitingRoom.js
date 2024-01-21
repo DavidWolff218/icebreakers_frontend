@@ -20,7 +20,7 @@ const WaitingRoom = (props) => {
         <h2 className="welcomeTextHost">
           As the <span className="welcomeTextHostSpan">host</span>, you can
           start the game whenever your party is ready!
-          {/* <AllUsers windowText={"Lobby"} users={props.users} /> */}
+          <AllUsers windowText={"Lobby"} users={props.users} />
           <Row className="seventy-five-row-seperator" />
           {startButton()}
         </h2>
@@ -33,7 +33,7 @@ const WaitingRoom = (props) => {
             <span className="welcomeTextUserSpan">{props.hostName}</span>, will
             start the game soon!
           </h2>
-          {/* <AllUsers windowText={"Lobby"} users={props.users} /> */}
+          <AllUsers windowText={"Lobby"} users={props.users} />
         </div>
       );
     }

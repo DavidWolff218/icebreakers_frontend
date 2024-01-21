@@ -8,6 +8,7 @@ import WaitingRoom from "../components/waitingRoom";
 
 const Room = (props) => {
 
+
   const [gameStarted, setGameStarted] = useState(false);
 
   const [gameRound, setGameRound] = useState({
@@ -34,30 +35,45 @@ const Room = (props) => {
 
 
   const handleReceived = (resp) => {
+
+    if (gameStarted){
+      setGameRound({
+        currentPlayer: resp.currentPlayer.username,
+        currentQuestion: resp.currentQuestion,
+        votingQuestionA: resp.votingQuestionA,
+        votingQuestionB: resp.votingQuestionB,
+        reshufflingUsers: resp.reshufflingUsers,
+        reshufflingQuestions: resp.reshufflingQuestions,
+        allUsers: resp.allUsers,
+        // add voting timer stuff here 
+      });
+      return
+    }
     // console.log("resp", resp)
-    if (!resp.room.game_started) {
+    else if (!resp.room.game_started) {
       console.log("1", resp)
-      // setGameRound({
-      //   allUsers: resp.allUsers
-      // })
+      setGameRound({
+        allUsers: resp.allUsers
+      })
       return
     }
     //can recieve from backend the users when a new one is made for lobby. problem in logic as game shouldnt start. need to rework
-     else if (!gameStarted && resp.room.game_started) {
+     else if (resp.room.game_started) {
       console.log("2")
-      startGame();
+      
       // ^^ need to investigate this further and what triggers start of game and why
+      setGameRound({
+        currentPlayer: resp.currentPlayer.username,
+        currentQuestion: resp.currentQuestion,
+        votingQuestionA: resp.votingQuestionA,
+        votingQuestionB: resp.votingQuestionB,
+        reshufflingUsers: resp.reshufflingUsers,
+        reshufflingQuestions: resp.reshufflingQuestions,
+        allUsers: resp.allUsers,
+        // add voting timer stuff here 
+      });
+      setGameStarted(true);
     }
-    setGameRound({
-      currentPlayer: resp.currentPlayer.username,
-      currentQuestion: resp.currentQuestion,
-      votingQuestionA: resp.votingQuestionA,
-      votingQuestionB: resp.votingQuestionB,
-      reshufflingUsers: resp.reshufflingUsers,
-      reshufflingQuestions: resp.reshufflingQuestions,
-      allUsers: resp.allUsers,
-      // add voting timer stuff here 
-    });
   };
 
   const handleNextClick = () => {
@@ -260,7 +276,7 @@ const Room = (props) => {
               hostName={props.hostName}
               currentUserId={props.currentUser.id}
               handleStartClick={handleStartClick}
-              // users={gameRound.allUsers}
+              users={gameRound.allUsers}
             />
           )}
           <Row className="seventy-five-row-seperator" />
