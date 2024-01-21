@@ -22,9 +22,17 @@ const Room = (props) => {
   });
  
   const handleReceived = (resp) => {
-    console.log("resp", resp)
+    // console.log("resp", resp)
+    if (!resp.room.game_started) {
+      console.log("1", resp)
+      // setGameRound({
+      //   allUsers: resp.allUsers
+      // })
+      return
+    }
     //can recieve from backend the users when a new one is made for lobby. problem in logic as game shouldnt start. need to rework
-    if (!props.gameStarted) {
+     else if (!props.gameStarted && resp.room.game_started) {
+      console.log("2")
       props.startGame();
       // ^^ need to investigate this further and what triggers start of game and why
     }
