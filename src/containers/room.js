@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ActionCableConsumer } from "@thrash-industries/react-actioncable-provider";
 import AllUsers from "../components/allUsers";
 import GameText from "../components/gameText";
@@ -24,6 +24,19 @@ const Room = (props) => {
     //   timerIntervalID: "",
     // ^^ to be used for voting feature
   });
+
+  useEffect(() => {
+    const roomId = props.match.params.id;
+    fetch(`http://localhost:3000/users/by_room/${roomId}`)
+    .then(resp => resp.json())
+    .then(resp => setGameRound({
+      allUsers: resp.allUsers
+    }))
+  }, [])
+
+ 
+
+
  
   const startGame = () => {
     setGameStarted(true);
