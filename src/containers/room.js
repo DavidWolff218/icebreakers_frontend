@@ -33,14 +33,9 @@ const Room = (props) => {
     }))
   }, [])
 
-  const startGame = () => {
-    setGameStarted(true);
-  };
-
   const endGame = () => {
     setGameStarted(false);
   };
-
 
   const handleReceived = (resp) => {
 
@@ -57,19 +52,17 @@ const Room = (props) => {
       });
       return
     }
-    // console.log("resp", resp)
+
     else if (!resp.room.game_started) {
-      console.log("1", resp)
+      //used for updating lobby of users as new ones come in
       setGameRound({
         allUsers: resp.allUsers
       })
       return
     }
-    //can recieve from backend the users when a new one is made for lobby. problem in logic as game shouldnt start. need to rework
+
      else if (resp.room.game_started) {
-      console.log("2")
-      
-      // ^^ need to investigate this further and what triggers start of game and why
+      //runs after host starts game
       setGameRound({
         currentPlayer: resp.currentPlayer.username,
         currentQuestion: resp.currentQuestion,
@@ -80,6 +73,7 @@ const Room = (props) => {
         allUsers: resp.allUsers,
         // add voting timer stuff here 
       });
+      //use this to trigger rerender of room text from waiting room to game
       setGameStarted(true);
     }
   };
@@ -136,17 +130,10 @@ const Room = (props) => {
   //   };
 
   const playerButton = () => {
-    //use to have this function seperated into two for the host and player. host will always get button
-    if (props.currentUser.id === props.hostID) {
+    if (props.currentUser.id === props.hostID || props.currentUser.username === gameRound.currentPlayer) {
       return (
         <button className="MainBtn" onClick={handleNextClick}>
           <h3 className="mainBtnText">NEXT QUESTION</h3>
-        </button>
-      );
-    } else if (props.currentUser.username === gameRound.currentPlayer) {
-      return (
-        <button className="MainBtn" onClick={handleNextClick}>
-          <h3 className="playerBtnText">NEXT QUESTION</h3>
         </button>
       );
     } else {

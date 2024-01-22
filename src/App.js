@@ -58,9 +58,6 @@ const App = () => {
             return (
               <Room
                 currentUser={roomInfo.currentUser}
-                // startGame={startGame}
-                // endGame={endGame}
-                // gameStarted={gameStarted}
                 hostID={roomInfo.hostID}
                 roomName={roomInfo.roomName}
                 hostName={roomInfo.hostName}
