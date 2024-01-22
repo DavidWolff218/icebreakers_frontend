@@ -8,8 +8,6 @@ import CreateRoom from "./containers/createRoom";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const App = () => {
- 
-  // const [gameStarted, setGameStarted] = useState(false);
 
   const [roomInfo, setRoomInfo] = useState({
     currentUser: "",
@@ -17,14 +15,6 @@ const App = () => {
     hostID: "",
     hostName: "",
   });
-
-  // const startGame = () => {
-  //   setGameStarted(true);
-  // };
-
-  // const endGame = () => {
-  //   setGameStarted(false);
-  // };
 
   const setCreateRoom = (currentUser, roomName, hostID, hostName) => {
     setRoomInfo({

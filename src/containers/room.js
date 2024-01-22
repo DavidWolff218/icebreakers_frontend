@@ -8,7 +8,6 @@ import WaitingRoom from "../components/waitingRoom";
 
 const Room = (props) => {
 
-
   const [gameStarted, setGameStarted] = useState(false);
 
   const [gameRound, setGameRound] = useState({
@@ -34,10 +33,6 @@ const Room = (props) => {
     }))
   }, [])
 
- 
-
-
- 
   const startGame = () => {
     setGameStarted(true);
   };
