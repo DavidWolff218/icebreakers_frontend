@@ -3,7 +3,7 @@ import icebreakersv8 from "../logo/icebreakersv8.png";
 import { Container, Row, Col } from "react-bootstrap";
 
 const CreateRoom = (props) => {
-  const [room, setRoom] = useState({
+  const [createForm, setCreateForm] = useState({
     room_name: "",
     password: "",
     username: "",
@@ -11,7 +11,7 @@ const CreateRoom = (props) => {
 
   const handleChange = (event) => {
     event.persist()
-    setRoom((prev) => 
+    setCreateForm((prev) => 
     ({
       ...prev,
       [event.target.name]: event.target.value,
@@ -26,7 +26,7 @@ const CreateRoom = (props) => {
         "Content-Type": "application/json",
         Accept: "application/json",
       },
-      body: JSON.stringify({ room: room }),
+      body: JSON.stringify({ room: createForm }),
     };
     fetch("http://localhost:3000/rooms", reqObj)
       .then((resp) => resp.json())
@@ -40,7 +40,7 @@ const CreateRoom = (props) => {
         );
         props.history.push(`/room/${resp.room.id}`);
       });
-    setRoom({ room_name: "", password: "", username: "" });
+    setCreateForm({ room_name: "", password: "", username: "" });
   };
 
   const renderForm = () => {
@@ -52,7 +52,7 @@ const CreateRoom = (props) => {
           className="form-input"
           id="rname"
           name="room_name"
-          value={room.room_name}
+          value={createForm.room_name}
           onChange={handleChange}
         />
         {/* {" "} not sure why this was here, but keeping it just in case...*/}
@@ -64,7 +64,7 @@ const CreateRoom = (props) => {
           id="pword"
           name="password"
           type="password"
-          value={room.password}
+          value={createForm.password}
           onChange={handleChange}
         />
         <br></br>
@@ -75,7 +75,7 @@ const CreateRoom = (props) => {
           id="uname"
           name="username"
           type="text"
-          value={room.username}
+          value={createForm.username}
           onChange={handleChange}
         />
         <br></br>
