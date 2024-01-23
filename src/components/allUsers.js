@@ -8,12 +8,8 @@ const allUsers = (props) => {
       return (
         <span className="eachUser" key={userObj.id}>
           {/* not sure if this span needs to exist, will check later */}
-          {/* removed function call below and doing all in one line. tested and works, but noting in case problems later */}
-          {userObj.is_active ? (
-            <h5 className="userTrue">{userObj.username}</h5>
-          ) : (
-            <h5 className="userFalse">{userObj.username}</h5>
-          )}
+          {/* {below used to be multi line conditional, not all done in className, making note in case any issues } */}
+          { <h5 className={userObj.is_active ? "userTrue" : "userFalse"}>{userObj.username}</h5> }
         </span>
       );
     });

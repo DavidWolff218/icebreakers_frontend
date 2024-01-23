@@ -3,7 +3,6 @@ import { Row, Col } from "react-bootstrap";
 import AllUsers from "./allUsers";
 
 const WaitingRoom = (props) => {
-  // console.log(props)
   const startButton = () => {
     return (
       <div>

@@ -7,7 +7,6 @@ import { Row, Col } from "react-bootstrap";
 import WaitingRoom from "../components/waitingRoom";
 
 const Room = (props) => {
-
   const [gameStarted, setGameStarted] = useState(false);
 
   const [gameRound, setGameRound] = useState({
@@ -27,24 +26,20 @@ const Room = (props) => {
   useEffect(() => {
     const roomId = props.match.params.id;
     fetch(`http://localhost:3000/users/by_room/${roomId}`)
-    .then(resp => resp.json())
-    .then(resp => setGameRound({
-      allUsers: resp.allUsers
-    }))
-  }, [])
-
-  const startGame = () => {
-    setGameStarted(true);
-  };
+      .then((resp) => resp.json())
+      .then((resp) =>
+        setGameRound({
+          allUsers: resp.allUsers,
+        })
+      );
+  }, []);
 
   const endGame = () => {
     setGameStarted(false);
   };
 
-
   const handleReceived = (resp) => {
-
-    if (gameStarted){
+    if (gameStarted) {
       setGameRound({
         currentPlayer: resp.currentPlayer.username,
         currentQuestion: resp.currentQuestion,
@@ -53,23 +48,17 @@ const Room = (props) => {
         reshufflingUsers: resp.reshufflingUsers,
         reshufflingQuestions: resp.reshufflingQuestions,
         allUsers: resp.allUsers,
-        // add voting timer stuff here 
+        // add voting timer stuff here
       });
-      return
-    }
-    // console.log("resp", resp)
-    else if (!resp.room.game_started) {
-      console.log("1", resp)
+      return;
+    } else if (!resp.room.game_started) {
+      //used for updating lobby of users as new ones come in
       setGameRound({
-        allUsers: resp.allUsers
-      })
-      return
-    }
-    //can recieve from backend the users when a new one is made for lobby. problem in logic as game shouldnt start. need to rework
-     else if (resp.room.game_started) {
-      console.log("2")
-      
-      // ^^ need to investigate this further and what triggers start of game and why
+        allUsers: resp.allUsers,
+      });
+      return;
+    } else if (resp.room.game_started) {
+      //runs after host starts game
       setGameRound({
         currentPlayer: resp.currentPlayer.username,
         currentQuestion: resp.currentQuestion,
@@ -78,8 +67,9 @@ const Room = (props) => {
         reshufflingUsers: resp.reshufflingUsers,
         reshufflingQuestions: resp.reshufflingQuestions,
         allUsers: resp.allUsers,
-        // add voting timer stuff here 
+        // add voting timer stuff here
       });
+      //use this to trigger rerender of room text from waiting room to game
       setGameStarted(true);
     }
   };
@@ -136,17 +126,13 @@ const Room = (props) => {
   //   };
 
   const playerButton = () => {
-    //use to have this function seperated into two for the host and player. host will always get button
-    if (props.currentUser.id === props.hostID) {
+    if (
+      props.currentUser.id === props.hostID ||
+      props.currentUser.username === gameRound.currentPlayer
+    ) {
       return (
         <button className="MainBtn" onClick={handleNextClick}>
           <h3 className="mainBtnText">NEXT QUESTION</h3>
-        </button>
-      );
-    } else if (props.currentUser.username === gameRound.currentPlayer) {
-      return (
-        <button className="MainBtn" onClick={handleNextClick}>
-          <h3 className="playerBtnText">NEXT QUESTION</h3>
         </button>
       );
     } else {
@@ -223,23 +209,28 @@ const Room = (props) => {
 
   const screenText = () => {
     return (
-      <GameText
-        currentPlayer={gameRound.currentPlayer}
-        currentQuestion={gameRound.currentQuestion}
-        votingQuestionA={gameRound.votingQuestionA}
-        votingQuestionB={gameRound.votingQuestionB}
-        reshufflingUsers={gameRound.reshufflingUsers}
-        reshufflingQuestions={gameRound.reshufflingQuestions}
-        // timerRunning={this.state.timerRunning}
-        // timerSeconds={this.state.timerSeconds}
-        resetUsersShuffle={resetUsersShuffle}
-        resetQuestionsShuffle={resetQuestionsShuffle}
-        resetUsersAndQuestionsShuffle={resetUsersAndQuestionsShuffle}
-        playerButton={playerButton}
-        // handleVote={this.handleVote}
-        // resetTimer={this.resetTimer}
-        // runTimer={this.runTimer}
-      />
+      <div>
+        {/* moved allUsers component to inside here, before was in a conditional in return. does mess with css, need to fix */}
+        <AllUsers windowText={"Players"} users={gameRound.allUsers} />
+        <br></br>
+        <GameText
+          currentPlayer={gameRound.currentPlayer}
+          currentQuestion={gameRound.currentQuestion}
+          votingQuestionA={gameRound.votingQuestionA}
+          votingQuestionB={gameRound.votingQuestionB}
+          reshufflingUsers={gameRound.reshufflingUsers}
+          reshufflingQuestions={gameRound.reshufflingQuestions}
+          // timerRunning={this.state.timerRunning}
+          // timerSeconds={this.state.timerSeconds}
+          resetUsersShuffle={resetUsersShuffle}
+          resetQuestionsShuffle={resetQuestionsShuffle}
+          resetUsersAndQuestionsShuffle={resetUsersAndQuestionsShuffle}
+          playerButton={playerButton}
+          // handleVote={this.handleVote}
+          // resetTimer={this.resetTimer}
+          // runTimer={this.runTimer}
+        />
+      </div>
     );
   };
 
@@ -255,17 +246,8 @@ const Room = (props) => {
       />
 
       <br></br>
-     
-      {/* //for the active game window players, logic now in room since reusing allUsers component in waiting room   */}
-     
-        {/* moved allusers and waiting room to inside actioncableconsumer...not sure if this has any side effects */}
-         {gameStarted ? (
-        <AllUsers
-          windowText={"Players"}
-          users={gameRound.allUsers}
-        />
-      ) : null}
-       <ActionCableConsumer
+
+      <ActionCableConsumer
         channel={{
           channel: "UsersChannel",
           room: props.match.params.id,

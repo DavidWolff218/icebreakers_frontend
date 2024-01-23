@@ -3,8 +3,8 @@ import icebreakersv8 from "../logo/icebreakersv8.png";
 import { Container, Row, Col } from "react-bootstrap";
 
 const Login = (props) => {
-  //check for users not fully filling in fields. do we need a minimum
-  const [room, setRoom] = useState({
+  //check for users not fully filling in fields. need to implement checks
+  const [loginForm, setLoginForm] = useState({
     room_name: "",
     password: "",
     username: "",
@@ -14,10 +14,11 @@ const Login = (props) => {
   //   // setRoom({...room,[event.target.name]: event.target.value})
   // };
   //keeping this as reference for another way to update state...not sure about potential side effects of event.persist below
+  //updated state to be more clear loginForm vs room
 
   const handleChange = (event) => {
     event.persist();
-    setRoom((prev) => ({
+    setLoginForm((prev) => ({
       ...prev,
       [event.target.name]: event.target.value,
     }));
@@ -31,14 +32,14 @@ const Login = (props) => {
         "Content-Type": "application/json",
         Accept: "application/json",
       },
-      body: JSON.stringify({ room: room }),
+      body: JSON.stringify({ room: loginForm }),
     };
     fetch("http://localhost:3000/", reqObj)
       .then((resp) => resp.json())
       .then((resp) => {
         if (resp.user) {
           localStorage.setItem("token", resp.jwt);
-          props.setLogin(
+          props.setCreateRoom(
             resp.user,
             resp.room.room_name,
             resp.room.host_id,
@@ -49,7 +50,7 @@ const Login = (props) => {
           alert(resp.error);
         }
       });
-    setRoom({
+    setLoginForm({
       room_name: "",
       password: "",
       username: "",
@@ -64,7 +65,7 @@ const Login = (props) => {
         <input
           className="form-input"
           name="room_name"
-          value={room.room_name}
+          value={loginForm.room_name}
           onChange={handleChange}
         />
         <br></br>
@@ -74,7 +75,7 @@ const Login = (props) => {
           className="form-input"
           name="password"
           type="password"
-          value={room.password}
+          value={loginForm.password}
           onChange={handleChange}
         />
         <br></br>
@@ -83,7 +84,7 @@ const Login = (props) => {
         <input
           className="form-input"
           name="username"
-          value={room.username}
+          value={loginForm.username}
           onChange={handleChange}
         />
         <br></br>
