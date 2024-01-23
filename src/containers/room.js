@@ -24,14 +24,21 @@ const Room = (props) => {
   });
 
   useEffect(() => {
-    const roomId = props.match.params.id;
-    fetch(`http://localhost:3000/users/by_room/${roomId}`)
-      .then((resp) => resp.json())
-      .then((resp) =>
+    const fetchUsers = async () => {
+      try {
+        const roomId = props.match.params.id;
+        const resp = await fetch(
+          `http://localhost:3000/users/by_room/${roomId}`
+        );
+        const data = await resp.json();
         setGameRound({
-          allUsers: resp.allUsers,
-        })
-      );
+          allUsers: data.allUsers,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchUsers();
   }, []);
 
   const endGame = () => {
