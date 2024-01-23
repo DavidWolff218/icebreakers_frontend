@@ -39,7 +39,7 @@ const Login = (props) => {
       .then((resp) => {
         if (resp.user) {
           localStorage.setItem("token", resp.jwt);
-          props.setLogin(
+          props.setCreateRoom(
             resp.user,
             resp.room.room_name,
             resp.room.host_id,

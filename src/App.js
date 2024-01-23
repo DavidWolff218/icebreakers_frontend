@@ -25,15 +25,6 @@ const App = () => {
     });
   };
 
-  const setLogin = (currentUser, roomName, hostID, hostName) => {
-    setRoomInfo({
-      currentUser: currentUser,
-      roomName: roomName,
-      hostID: hostID,
-      hostName: hostName,
-    });
-  };
-
   return (
     <Router>
       <div className="App">
@@ -48,7 +39,7 @@ const App = () => {
           exact
           path="/login"
           render={(routeParams) => {
-            return <Login setLogin={setLogin} {...routeParams} />;
+            return <Login setCreateRoom={setCreateRoom} {...routeParams} />;
           }}
         />
         <Route
