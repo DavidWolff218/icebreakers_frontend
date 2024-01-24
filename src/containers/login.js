@@ -39,7 +39,6 @@ const Login = (props) => {
       const data = await resp.json();
       if (resp.ok) {
         localStorage.setItem("token", data.jwt);
-        console.log("now here");
         props.setCreateRoom(
           data.user,
           data.room.room_name,
@@ -56,7 +55,6 @@ const Login = (props) => {
         alert(data.error);
       }
     } catch (error) {
-      console.log("here", error);
       alert("here", error);
     }
   };

@@ -147,7 +147,7 @@ const Room = (props) => {
     }
   };
 
-  const logoutBtn = () => {
+  const logoutBtn = async () => {
     let id = props.currentUser.id;
     const reqObj = {
       method: "DELETE",
@@ -161,16 +161,18 @@ const Room = (props) => {
         },
       }),
     };
-    fetch(`http://localhost:3000/users/${id}`, reqObj)
-      .then((resp) => resp.json())
-      .then((user) => {
+    const resp = await fetch(`http://localhost:3000/users/${id}`, reqObj)
+      try{
         localStorage.removeItem("token");
         props.history.push(`/`);
-      });
+      } catch (error) {
+        console.log(error)
+      }
   };
 
-  const endGameBtn = () => {
+  const endGameBtn = async () => {
     let id = props.match.params.id;
+    console.log(id)
     const reqObj = {
       method: "DELETE",
       headers: {
@@ -183,13 +185,14 @@ const Room = (props) => {
         },
       }),
     };
-    fetch(`http://localhost:3000/rooms/${id}`, reqObj)
-      .then((resp) => resp.json())
-      .then((room) => {
-        endGame();
+    const resp = await fetch(`http://localhost:3000/rooms/${id}`, reqObj)
+      try{
+        endGame()
         localStorage.removeItem("token");
         props.history.push(`/`);
-      });
+      } catch (error) {
+        console.log(error)
+      }
   };
 
   const resetUsersAndQuestionsShuffle = () => {
