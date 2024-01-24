@@ -24,7 +24,7 @@ const Login = (props) => {
     }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const reqObj = {
       method: "POST",
@@ -34,27 +34,29 @@ const Login = (props) => {
       },
       body: JSON.stringify({ room: loginForm }),
     };
-    fetch("http://localhost:3000/", reqObj)
-      .then((resp) => resp.json())
-      .then((resp) => {
-        if (resp.user) {
-          localStorage.setItem("token", resp.jwt);
-          props.setCreateRoom(
-            resp.user,
-            resp.room.room_name,
-            resp.room.host_id,
-            resp.room.host_name
-          );
-          props.history.push(`/room/${resp.room.id}`);
-        } else {
-          alert(resp.error);
-        }
-      });
-    setLoginForm({
-      room_name: "",
-      password: "",
-      username: "",
-    });
+    try {
+      const resp = await fetch("http://localhost:3000/", reqObj);
+      const data = await resp.json();
+      if (resp.ok) {
+        localStorage.setItem("token", data.jwt);
+        props.setCreateRoom(
+          data.user,
+          data.room.room_name,
+          data.room.host_id,
+          data.room.host_name
+        );
+        setLoginForm({
+          room_name: "",
+          password: "",
+          username: "",
+        });
+        props.history.push(`/room/${data.room.id}`);
+      } else {
+        alert(data.error);
+      }
+    } catch (error) {
+      alert("here", error);
+    }
   };
 
   const renderForm = () => {

@@ -18,7 +18,7 @@ const CreateRoom = (props) => {
     }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const reqObj = {
       method: "POST",
@@ -28,19 +28,22 @@ const CreateRoom = (props) => {
       },
       body: JSON.stringify({ room: createForm }),
     };
-    fetch("http://localhost:3000/rooms", reqObj)
-      .then((resp) => resp.json())
-      .then((resp) => {
-        localStorage.setItem("token", resp.jwt);
-        props.setCreateRoom(
-          resp.user,
-          resp.room.room_name,
-          resp.room.host_id,
-          resp.room.host_name
-        );
-        props.history.push(`/room/${resp.room.id}`);
-      });
-    setCreateForm({ room_name: "", password: "", username: "" });
+    //add condtional below if needed for rendering error on screen
+    try {
+      const resp = await fetch ("http://localhost:3000/rooms", reqObj)
+      const data = await resp.json()
+          localStorage.setItem("token", data.jwt);
+          props.setCreateRoom(
+            data.user,
+            data.room.room_name,
+            data.room.host_id,
+            data.room.host_name
+          );
+          setCreateForm({ room_name: "", password: "", username: "" });
+          props.history.push(`/room/${data.room.id}`);
+    } catch (error) {
+      alert (error)
+    }
   };
 
   const renderForm = () => {
