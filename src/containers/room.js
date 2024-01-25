@@ -7,6 +7,9 @@ import { Row, Col } from "react-bootstrap";
 import WaitingRoom from "../components/waitingRoom";
 
 const Room = (props) => {
+
+  console.log("first room", props)
+  
   const [gameStarted, setGameStarted] = useState(false);
 
   const [gameRound, setGameRound] = useState({
@@ -24,6 +27,8 @@ const Room = (props) => {
   });
 
   useEffect(() => {
+    //not sure if this conditonal is needed. it does work fine like before (except for breaking when new player)
+    if (!gameStarted) {
     const fetchUsers = async () => {
       try {
         const roomId = props.match.params.id;
@@ -39,13 +44,15 @@ const Room = (props) => {
       }
     };
     fetchUsers();
-  }, []);
+  } 
+}, []);
 
   const endGame = () => {
     setGameStarted(false);
   };
 
   const handleReceived = (resp) => {
+    console.log("handle recieved", resp)
     if (gameStarted) {
       setGameRound({
         currentPlayer: resp.currentPlayer.username,
@@ -172,7 +179,6 @@ const Room = (props) => {
 
   const endGameBtn = async () => {
     let id = props.match.params.id;
-    console.log(id)
     const reqObj = {
       method: "DELETE",
       headers: {
@@ -244,6 +250,18 @@ const Room = (props) => {
     );
   };
 
+  const waitingText = () => {
+    if (!gameStarted) {
+    return <WaitingRoom
+    hostID={props.hostID}
+    hostName={props.hostName}
+    currentUserId={props.currentUser.id}
+    handleStartClick={handleStartClick}
+    users={gameRound.allUsers}
+  />
+    }
+  }
+
   return (
     <div>
       <NavBar
@@ -271,13 +289,7 @@ const Room = (props) => {
           {gameStarted ? (
             screenText()
           ) : (
-            <WaitingRoom
-              hostID={props.hostID}
-              hostName={props.hostName}
-              currentUserId={props.currentUser.id}
-              handleStartClick={handleStartClick}
-              users={gameRound.allUsers}
-            />
+           waitingText()
           )}
           <Row className="seventy-five-row-seperator" />
           {/* this ^^^ kept after removing startbutton from here to keep css in order */}

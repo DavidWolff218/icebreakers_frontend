@@ -14,14 +14,16 @@ const App = () => {
     roomName: "",
     hostID: "",
     hostName: "",
+    game_started: false
   });
 
-  const setCreateRoom = (currentUser, roomName, hostID, hostName) => {
+  const setCreateRoom = (currentUser, roomName, hostID, hostName, game_started) => {
     setRoomInfo({
       currentUser: currentUser,
       roomName: roomName,
       hostID: hostID,
       hostName: hostName,
+      game_started: game_started
     });
   };
 
