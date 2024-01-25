@@ -14,16 +14,16 @@ const App = () => {
     roomName: "",
     hostID: "",
     hostName: "",
-    game_started: false
+    gameStarted: false
   });
 
-  const setCreateRoom = (currentUser, roomName, hostID, hostName, game_started) => {
+  const setCreateRoom = (currentUser, roomName, hostID, hostName, gameStarted) => {
     setRoomInfo({
       currentUser: currentUser,
       roomName: roomName,
       hostID: hostID,
       hostName: hostName,
-      game_started: game_started
+      gameStarted: gameStarted
     });
   };
 
@@ -54,6 +54,7 @@ const App = () => {
                 hostID={roomInfo.hostID}
                 roomName={roomInfo.roomName}
                 hostName={roomInfo.hostName}
+                gameStartedWaiting={roomInfo.gameStarted}
                 {...routeParams}
               />
             );

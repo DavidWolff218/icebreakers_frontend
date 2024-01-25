@@ -8,8 +8,8 @@ import WaitingRoom from "../components/waitingRoom";
 
 const Room = (props) => {
 
-  console.log("first room", props)
-  
+  console.log("first room", props.gameStartedWaiting)
+
   const [gameStarted, setGameStarted] = useState(false);
 
   const [gameRound, setGameRound] = useState({
@@ -28,7 +28,7 @@ const Room = (props) => {
 
   useEffect(() => {
     //not sure if this conditonal is needed. it does work fine like before (except for breaking when new player)
-    if (!gameStarted) {
+    if (!gameStarted && !props.gameStartedWaiting) {
     const fetchUsers = async () => {
       try {
         const roomId = props.match.params.id;
