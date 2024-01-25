@@ -8,10 +8,10 @@ import WaitingRoom from "../components/waitingRoom";
 
 const Room = (props) => {
 
-  // console.log("first room", props.gameStartedWaiting)
-
-  const [gameStarted, setGameStarted] = useState(false);
-  console.log("gamestarted state update", gameStarted)
+  // const [gameStarted, setGameStarted] = useState(false);
+  // keeping this here for Reference, originally used in useEffect conditional (false),
+  // handleReceived(if/true, else/if/false for gameStarted trigger/1st play), waitingText(if/false, elseif/false),
+  // and in return statment ternary for screentText or waiting Text
 
   const [gameRound, setGameRound] = useState({
     currentPlayer: "",
@@ -28,27 +28,6 @@ const Room = (props) => {
   });
 
   console.log("here is the gmaeournd", gameRound)
-
-//   useEffect(() => {
-//     //not sure if this conditonal is needed. it does work fine like before (except for breaking when new player)
-//     if (!gameStarted && props.gameStartedWaiting === false) {
-//     const fetchUsers = async () => {
-//       try {
-//         const roomId = props.match.params.id;
-//         const resp = await fetch(
-//           `http://localhost:3000/users/by_room/${roomId}`
-//         );
-//         const data = await resp.json();
-//         setGameRound({
-//           allUsers: data.allUsers,
-//         });
-//       } catch (error) {
-//         console.log(error);
-//       }
-//     };
-//     fetchUsers();
-//   } 
-// }, []);
 
 useEffect(() => {
   //not sure if this conditonal is needed. it does work fine like before (except for breaking when new player)
@@ -73,52 +52,8 @@ useEffect(() => {
 }, []);
 
   const endGame = () => {
-    setGameStarted(false);
+    // setGameStarted(false);
   };
-
-  // const handleReceived = (resp) => {
-  //   console.log("handle recieved", gameStarted, resp)
-  //   if (gameStarted) {
-  //     console.log("I am in first conditional", gameStarted, resp.currentQuestion)
-  //     setGameRound({
-  //       currentPlayer: resp.currentPlayer.username,
-  //       currentQuestion: resp.currentQuestion,
-  //       votingQuestionA: resp.votingQuestionA,
-  //       votingQuestionB: resp.votingQuestionB,
-  //       reshufflingUsers: resp.reshufflingUsers,
-  //       reshufflingQuestions: resp.reshufflingQuestions,
-  //       allUsers: resp.allUsers,
-  //       // add voting timer stuff here
-  //     });
-  //     return;
-  //   } else if (!resp.room.game_started) {
-  //     //used for updating lobby of users as new ones come in
-  //     setGameRound({
-  //       allUsers: resp.allUsers,
-  //     });
-  //     return;
-  //   } else if (resp.room.game_started && gameStarted === false) {
-  //     //runs after host starts game
-  //     console.log("111111111111", resp)
-  //     console.log("conditional gamestarted state", gameStarted)
-  //     // setGameStarted(true);
-      
-  //     setGameRound({
-  //       currentPlayer: resp.currentPlayer.username,
-  //       currentQuestion: resp.currentQuestion,
-  //       votingQuestionA: resp.votingQuestionA,
-  //       votingQuestionB: resp.votingQuestionB,
-  //       reshufflingUsers: resp.reshufflingUsers,
-  //       reshufflingQuestions: resp.reshufflingQuestions,
-  //       allUsers: resp.allUsers,
-  //       // add voting timer stuff here
-  //     });
-  //     //use this to trigger rerender of room text from waiting room to game
-  //     console.log("222222222", resp)
-  //     setGameStarted(true);
-  //     return
-  //   }
-  // };
 
   const handleReceived = (resp) => {
     console.log("handle recieved", resp)
@@ -136,32 +71,34 @@ useEffect(() => {
       });
       return;
     } else if (!resp.room.game_started) {
+      console.log("false condtional", resp)
       //used for updating lobby of users as new ones come in
       setGameRound({
         allUsers: resp.allUsers,
       });
       return;
-    } else if (false) {
-      //runs after host starts game
-      console.log("111111111111", resp)
-      console.log("conditional gamestarted state", gameStarted)
-      // setGameStarted(true);
+    } 
+    // else if (false) {
+    //   //runs after host starts game
+    //   console.log("111111111111", resp)
+    //   console.log("conditional gamestarted state", gameStarted)
+    //   // setGameStarted(true);
       
-      setGameRound({
-        currentPlayer: resp.currentPlayer.username,
-        currentQuestion: resp.currentQuestion,
-        votingQuestionA: resp.votingQuestionA,
-        votingQuestionB: resp.votingQuestionB,
-        reshufflingUsers: resp.reshufflingUsers,
-        reshufflingQuestions: resp.reshufflingQuestions,
-        allUsers: resp.allUsers,
-        // add voting timer stuff here
-      });
-      //use this to trigger rerender of room text from waiting room to game
-      console.log("222222222", resp)
-      setGameStarted(true);
-      return
-    }
+    //   setGameRound({
+    //     currentPlayer: resp.currentPlayer.username,
+    //     currentQuestion: resp.currentQuestion,
+    //     votingQuestionA: resp.votingQuestionA,
+    //     votingQuestionB: resp.votingQuestionB,
+    //     reshufflingUsers: resp.reshufflingUsers,
+    //     reshufflingQuestions: resp.reshufflingQuestions,
+    //     allUsers: resp.allUsers,
+    //     // add voting timer stuff here
+    //   });
+    //   //use this to trigger rerender of room text from waiting room to game
+    //   console.log("222222222", resp)
+    //   setGameStarted(true);
+    //   return
+    // }
   };
 
   const handleNextClick = () => {
@@ -327,7 +264,7 @@ useEffect(() => {
   };
 
   const waitingText = () => {
-    if (!gameStarted && props.gameStartedWaiting === false) {
+    if (props.gameStartedWaiting === false) {
     return <WaitingRoom
     hostID={props.hostID}
     hostName={props.hostName}
@@ -335,7 +272,7 @@ useEffect(() => {
     handleStartClick={handleStartClick}
     users={gameRound.allUsers}
   />
-    } else if (!gameStarted && props.gameStartedWaiting) {
+    } else if (props.gameStartedWaiting) {
       return "you will be added in the next round"
     }
   }
