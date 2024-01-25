@@ -18,6 +18,7 @@ const App = () => {
   });
 
   const setCreateRoom = (currentUser, roomName, hostID, hostName, gameStarted) => {
+    // console.log("gameStarted", gameStarted)
     setRoomInfo({
       currentUser: currentUser,
       roomName: roomName,

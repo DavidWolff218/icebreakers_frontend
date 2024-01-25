@@ -25,6 +25,7 @@ const Login = (props) => {
   };
 
   const handleSubmit = async (event) => {
+    console.log("login submit")
     event.preventDefault();
     const reqObj = {
       method: "POST",

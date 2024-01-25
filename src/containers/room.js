@@ -8,9 +8,10 @@ import WaitingRoom from "../components/waitingRoom";
 
 const Room = (props) => {
 
-  console.log("first room", props.gameStartedWaiting)
+  // console.log("first room", props.gameStartedWaiting)
 
   const [gameStarted, setGameStarted] = useState(false);
+  console.log("gamestarted state update", gameStarted)
 
   const [gameRound, setGameRound] = useState({
     currentPlayer: "",
@@ -26,34 +27,103 @@ const Room = (props) => {
     // ^^ to be used for voting feature
   });
 
-  useEffect(() => {
-    //not sure if this conditonal is needed. it does work fine like before (except for breaking when new player)
-    if (!gameStarted && !props.gameStartedWaiting) {
-    const fetchUsers = async () => {
-      try {
-        const roomId = props.match.params.id;
-        const resp = await fetch(
-          `http://localhost:3000/users/by_room/${roomId}`
-        );
-        const data = await resp.json();
-        setGameRound({
-          allUsers: data.allUsers,
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchUsers();
-  } 
+  console.log("here is the gmaeournd", gameRound)
+
+//   useEffect(() => {
+//     //not sure if this conditonal is needed. it does work fine like before (except for breaking when new player)
+//     if (!gameStarted && props.gameStartedWaiting === false) {
+//     const fetchUsers = async () => {
+//       try {
+//         const roomId = props.match.params.id;
+//         const resp = await fetch(
+//           `http://localhost:3000/users/by_room/${roomId}`
+//         );
+//         const data = await resp.json();
+//         setGameRound({
+//           allUsers: data.allUsers,
+//         });
+//       } catch (error) {
+//         console.log(error);
+//       }
+//     };
+//     fetchUsers();
+//   } 
+// }, []);
+
+useEffect(() => {
+  //not sure if this conditonal is needed. it does work fine like before (except for breaking when new player)
+  //maybe this always runs, let the text rendering decide how to display
+  if (props.gameStartedWaiting === false) {
+  const fetchUsers = async () => {
+    try {
+      const roomId = props.match.params.id;
+      const resp = await fetch(
+        `http://localhost:3000/users/by_room/${roomId}`
+      );
+      const data = await resp.json();
+      setGameRound({
+        allUsers: data.allUsers,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  fetchUsers();
+} 
 }, []);
 
   const endGame = () => {
     setGameStarted(false);
   };
 
+  // const handleReceived = (resp) => {
+  //   console.log("handle recieved", gameStarted, resp)
+  //   if (gameStarted) {
+  //     console.log("I am in first conditional", gameStarted, resp.currentQuestion)
+  //     setGameRound({
+  //       currentPlayer: resp.currentPlayer.username,
+  //       currentQuestion: resp.currentQuestion,
+  //       votingQuestionA: resp.votingQuestionA,
+  //       votingQuestionB: resp.votingQuestionB,
+  //       reshufflingUsers: resp.reshufflingUsers,
+  //       reshufflingQuestions: resp.reshufflingQuestions,
+  //       allUsers: resp.allUsers,
+  //       // add voting timer stuff here
+  //     });
+  //     return;
+  //   } else if (!resp.room.game_started) {
+  //     //used for updating lobby of users as new ones come in
+  //     setGameRound({
+  //       allUsers: resp.allUsers,
+  //     });
+  //     return;
+  //   } else if (resp.room.game_started && gameStarted === false) {
+  //     //runs after host starts game
+  //     console.log("111111111111", resp)
+  //     console.log("conditional gamestarted state", gameStarted)
+  //     // setGameStarted(true);
+      
+  //     setGameRound({
+  //       currentPlayer: resp.currentPlayer.username,
+  //       currentQuestion: resp.currentQuestion,
+  //       votingQuestionA: resp.votingQuestionA,
+  //       votingQuestionB: resp.votingQuestionB,
+  //       reshufflingUsers: resp.reshufflingUsers,
+  //       reshufflingQuestions: resp.reshufflingQuestions,
+  //       allUsers: resp.allUsers,
+  //       // add voting timer stuff here
+  //     });
+  //     //use this to trigger rerender of room text from waiting room to game
+  //     console.log("222222222", resp)
+  //     setGameStarted(true);
+  //     return
+  //   }
+  // };
+
   const handleReceived = (resp) => {
     console.log("handle recieved", resp)
-    if (gameStarted) {
+    if (resp.room.game_started && resp.currentQuestion) {
+      console.log("I am in first conditional")
       setGameRound({
         currentPlayer: resp.currentPlayer.username,
         currentQuestion: resp.currentQuestion,
@@ -71,8 +141,12 @@ const Room = (props) => {
         allUsers: resp.allUsers,
       });
       return;
-    } else if (resp.room.game_started) {
+    } else if (false) {
       //runs after host starts game
+      console.log("111111111111", resp)
+      console.log("conditional gamestarted state", gameStarted)
+      // setGameStarted(true);
+      
       setGameRound({
         currentPlayer: resp.currentPlayer.username,
         currentQuestion: resp.currentQuestion,
@@ -84,7 +158,9 @@ const Room = (props) => {
         // add voting timer stuff here
       });
       //use this to trigger rerender of room text from waiting room to game
+      console.log("222222222", resp)
       setGameStarted(true);
+      return
     }
   };
 
@@ -251,7 +327,7 @@ const Room = (props) => {
   };
 
   const waitingText = () => {
-    if (!gameStarted) {
+    if (!gameStarted && props.gameStartedWaiting === false) {
     return <WaitingRoom
     hostID={props.hostID}
     hostName={props.hostName}
@@ -259,6 +335,8 @@ const Room = (props) => {
     handleStartClick={handleStartClick}
     users={gameRound.allUsers}
   />
+    } else if (!gameStarted && props.gameStartedWaiting) {
+      return "you will be added in the next round"
     }
   }
 
@@ -286,10 +364,11 @@ const Room = (props) => {
         <Col className="align-self-center">
           <Row className="seventy-five-row-seperator" />
           {/* this displays the gameplay text (questions, players, button etc) or the waiting room */}
-          {gameStarted ? (
+          {gameRound.currentQuestion && Object.keys(gameRound.currentQuestion).length > 0 ? (
+            
             screenText()
-          ) : (
-           waitingText()
+            ) : (
+            waitingText()
           )}
           <Row className="seventy-five-row-seperator" />
           {/* this ^^^ kept after removing startbutton from here to keep css in order */}
