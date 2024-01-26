@@ -27,12 +27,9 @@ const Room = (props) => {
     // ^^ to be used for voting feature
   });
 
-  console.log("here is the gmaeournd", gameRound)
-
 useEffect(() => {
-  //not sure if this conditonal is needed. it does work fine like before (except for breaking when new player)
-  //maybe this always runs, let the text rendering decide how to display
-  if (props.gameStartedWaiting === false) {
+  //here to load inital waiting room of players, only runs if game hasn't officially started
+  if (!props.gameStartedWaiting) {
   const fetchUsers = async () => {
     try {
       const roomId = props.match.params.id;
@@ -56,9 +53,8 @@ useEffect(() => {
   };
 
   const handleReceived = (resp) => {
-    console.log("handle recieved", resp)
     if (resp.room.game_started && resp.currentQuestion) {
-      console.log("I am in first conditional")
+      //for use when game has started and players is active in game, resp.currentQuestion filters out players joining midgame
       setGameRound({
         currentPlayer: resp.currentPlayer.username,
         currentQuestion: resp.currentQuestion,
@@ -71,34 +67,12 @@ useEffect(() => {
       });
       return;
     } else if (!resp.room.game_started) {
-      console.log("false condtional", resp)
       //used for updating lobby of users as new ones come in
       setGameRound({
         allUsers: resp.allUsers,
       });
       return;
     } 
-    // else if (false) {
-    //   //runs after host starts game
-    //   console.log("111111111111", resp)
-    //   console.log("conditional gamestarted state", gameStarted)
-    //   // setGameStarted(true);
-      
-    //   setGameRound({
-    //     currentPlayer: resp.currentPlayer.username,
-    //     currentQuestion: resp.currentQuestion,
-    //     votingQuestionA: resp.votingQuestionA,
-    //     votingQuestionB: resp.votingQuestionB,
-    //     reshufflingUsers: resp.reshufflingUsers,
-    //     reshufflingQuestions: resp.reshufflingQuestions,
-    //     allUsers: resp.allUsers,
-    //     // add voting timer stuff here
-    //   });
-    //   //use this to trigger rerender of room text from waiting room to game
-    //   console.log("222222222", resp)
-    //   setGameStarted(true);
-    //   return
-    // }
   };
 
   const handleNextClick = () => {
@@ -264,7 +238,7 @@ useEffect(() => {
   };
 
   const waitingText = () => {
-    if (props.gameStartedWaiting === false) {
+    if (!props.gameStartedWaiting) {
     return <WaitingRoom
     hostID={props.hostID}
     hostName={props.hostName}
@@ -301,8 +275,8 @@ useEffect(() => {
         <Col className="align-self-center">
           <Row className="seventy-five-row-seperator" />
           {/* this displays the gameplay text (questions, players, button etc) or the waiting room */}
-          {gameRound.currentQuestion && Object.keys(gameRound.currentQuestion).length > 0 ? (
-            
+            {/* This conditional is to check if the game is active for the current player window, shortened it from gameRound.currentQuestion && Object.keys(gameRound.currentQuestion).length > 0 */}
+           {gameRound.currentPlayer ? (
             screenText()
             ) : (
             waitingText()
