@@ -86,7 +86,7 @@ useEffect(() => {
       body: JSON.stringify({
         user: {
           room: props.match.params.id,
-          currentPlayer: gameRound.currentPlayer,
+          currentPlayerID: gameRound.currentPlayerID,
         },
         question: {
           id: gameRound.currentQuestion.id,
