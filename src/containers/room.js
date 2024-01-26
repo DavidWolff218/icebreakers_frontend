@@ -15,6 +15,7 @@ const Room = (props) => {
 
   const [gameRound, setGameRound] = useState({
     currentPlayer: "",
+    currentPlayerID: "",
     currentQuestion: {},
     votingQuestionA: "",
     votingQuestionB: "",
@@ -26,7 +27,7 @@ const Room = (props) => {
     //   timerIntervalID: "",
     // ^^ to be used for voting feature
   });
-
+console.log(gameRound)
 useEffect(() => {
   //here to load inital waiting room of players, only runs if game hasn't officially started
   if (!props.gameStartedWaiting) {
@@ -57,6 +58,7 @@ useEffect(() => {
       //for use when game has started and players is active in game, resp.currentQuestion filters out players joining midgame
       setGameRound({
         currentPlayer: resp.currentPlayer.username,
+        currentPlayerID: resp.currentPlayer.id,
         currentQuestion: resp.currentQuestion,
         votingQuestionA: resp.votingQuestionA,
         votingQuestionB: resp.votingQuestionB,
@@ -127,9 +129,10 @@ useEffect(() => {
   //   };
 
   const playerButton = () => {
+    //props.currentUser is to track the individual user on their device, gameRound tracks whose turn it is
     if (
       props.currentUser.id === props.hostID ||
-      props.currentUser.username === gameRound.currentPlayer
+      props.currentUser.id === gameRound.currentPlayerID
     ) {
       return (
         <button className="MainBtn" onClick={handleNextClick}>
