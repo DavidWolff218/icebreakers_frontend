@@ -37,7 +37,8 @@ const CreateRoom = (props) => {
             data.user,
             data.room.room_name,
             data.room.host_id,
-            data.room.host_name
+            data.room.host_name,
+            data.room.game_started
           );
           setCreateForm({ room_name: "", password: "", username: "" });
           props.history.push(`/room/${data.room.id}`);

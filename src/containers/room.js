@@ -7,7 +7,11 @@ import { Row, Col } from "react-bootstrap";
 import WaitingRoom from "../components/waitingRoom";
 
 const Room = (props) => {
-  const [gameStarted, setGameStarted] = useState(false);
+
+  // const [gameStarted, setGameStarted] = useState(false);
+  // keeping this here for Reference, originally used in useEffect conditional (false),
+  // handleReceived(if/true, else/if/false for gameStarted trigger/1st play), waitingText(if/false, elseif/false),
+  // and in return statment ternary for screentText or waiting Text
 
   const [gameRound, setGameRound] = useState({
     currentPlayer: "",
@@ -23,30 +27,34 @@ const Room = (props) => {
     // ^^ to be used for voting feature
   });
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const roomId = props.match.params.id;
-        const resp = await fetch(
-          `http://localhost:3000/users/by_room/${roomId}`
-        );
-        const data = await resp.json();
-        setGameRound({
-          allUsers: data.allUsers,
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchUsers();
-  }, []);
+useEffect(() => {
+  //here to load inital waiting room of players, only runs if game hasn't officially started
+  if (!props.gameStartedWaiting) {
+  const fetchUsers = async () => {
+    try {
+      const roomId = props.match.params.id;
+      const resp = await fetch(
+        `http://localhost:3000/users/by_room/${roomId}`
+      );
+      const data = await resp.json();
+      setGameRound({
+        allUsers: data.allUsers,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  fetchUsers();
+} 
+}, []);
 
   const endGame = () => {
-    setGameStarted(false);
+    // setGameStarted(false);
   };
 
   const handleReceived = (resp) => {
-    if (gameStarted) {
+    if (resp.room.game_started && resp.currentQuestion) {
+      //for use when game has started and players is active in game, resp.currentQuestion filters out players joining midgame
       setGameRound({
         currentPlayer: resp.currentPlayer.username,
         currentQuestion: resp.currentQuestion,
@@ -64,21 +72,7 @@ const Room = (props) => {
         allUsers: resp.allUsers,
       });
       return;
-    } else if (resp.room.game_started) {
-      //runs after host starts game
-      setGameRound({
-        currentPlayer: resp.currentPlayer.username,
-        currentQuestion: resp.currentQuestion,
-        votingQuestionA: resp.votingQuestionA,
-        votingQuestionB: resp.votingQuestionB,
-        reshufflingUsers: resp.reshufflingUsers,
-        reshufflingQuestions: resp.reshufflingQuestions,
-        allUsers: resp.allUsers,
-        // add voting timer stuff here
-      });
-      //use this to trigger rerender of room text from waiting room to game
-      setGameStarted(true);
-    }
+    } 
   };
 
   const handleNextClick = () => {
@@ -172,7 +166,6 @@ const Room = (props) => {
 
   const endGameBtn = async () => {
     let id = props.match.params.id;
-    console.log(id)
     const reqObj = {
       method: "DELETE",
       headers: {
@@ -244,6 +237,20 @@ const Room = (props) => {
     );
   };
 
+  const waitingText = () => {
+    if (!props.gameStartedWaiting) {
+    return <WaitingRoom
+    hostID={props.hostID}
+    hostName={props.hostName}
+    currentUserId={props.currentUser.id}
+    handleStartClick={handleStartClick}
+    users={gameRound.allUsers}
+  />
+    } else if (props.gameStartedWaiting) {
+      return "you will be added in the next round"
+    }
+  }
+
   return (
     <div>
       <NavBar
@@ -268,16 +275,11 @@ const Room = (props) => {
         <Col className="align-self-center">
           <Row className="seventy-five-row-seperator" />
           {/* this displays the gameplay text (questions, players, button etc) or the waiting room */}
-          {gameStarted ? (
+            {/* This conditional is to check if the game is active for the current player window, shortened it from gameRound.currentQuestion && Object.keys(gameRound.currentQuestion).length > 0 */}
+           {gameRound.currentPlayer ? (
             screenText()
-          ) : (
-            <WaitingRoom
-              hostID={props.hostID}
-              hostName={props.hostName}
-              currentUserId={props.currentUser.id}
-              handleStartClick={handleStartClick}
-              users={gameRound.allUsers}
-            />
+            ) : (
+            waitingText()
           )}
           <Row className="seventy-five-row-seperator" />
           {/* this ^^^ kept after removing startbutton from here to keep css in order */}

@@ -25,6 +25,7 @@ const Login = (props) => {
   };
 
   const handleSubmit = async (event) => {
+    console.log("login submit")
     event.preventDefault();
     const reqObj = {
       method: "POST",
@@ -39,11 +40,13 @@ const Login = (props) => {
       const data = await resp.json();
       if (resp.ok) {
         localStorage.setItem("token", data.jwt);
+        console.log("login data return", data)
         props.setCreateRoom(
           data.user,
           data.room.room_name,
           data.room.host_id,
-          data.room.host_name
+          data.room.host_name,
+          data.room.game_started
         );
         setLoginForm({
           room_name: "",
