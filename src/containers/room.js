@@ -50,7 +50,15 @@ const Room = (props) => {
 }, []);
 
   const handleReceived = (resp) => {
-    console.log(resp)
+    
+    if (resp.endGame) {
+      //runs this check to see if host ended game
+      //add popup here to inform user
+      localStorage.removeItem("token");
+      props.history.push(`/`);
+      return
+    }
+
     if (resp.room.game_started && resp.currentQuestion) {
       //for use when game has started and players is active in game, resp.currentQuestion filters out players joining midgame
       setGameRound({
