@@ -15,6 +15,7 @@ const Room = (props) => {
 
   const [gameRound, setGameRound] = useState({
     currentPlayer: "",
+    currentPlayerID: "",
     currentQuestion: {},
     votingQuestionA: "",
     votingQuestionB: "",
@@ -27,7 +28,7 @@ const Room = (props) => {
     // ^^ to be used for voting feature
   });
 
-useEffect(() => {
+  useEffect(() => {
   //here to load inital waiting room of players, only runs if game hasn't officially started
   if (!props.gameStartedWaiting) {
   const fetchUsers = async () => {
@@ -48,15 +49,21 @@ useEffect(() => {
 } 
 }, []);
 
-  const endGame = () => {
-    // setGameStarted(false);
-  };
-
   const handleReceived = (resp) => {
+    
+    if (resp.endGame) {
+      //runs this check to see if host ended game
+      //add popup here to inform user
+      localStorage.removeItem("token");
+      props.history.push(`/`);
+      return
+    }
+
     if (resp.room.game_started && resp.currentQuestion) {
       //for use when game has started and players is active in game, resp.currentQuestion filters out players joining midgame
       setGameRound({
         currentPlayer: resp.currentPlayer.username,
+        currentPlayerID: resp.currentPlayer.id,
         currentQuestion: resp.currentQuestion,
         votingQuestionA: resp.votingQuestionA,
         votingQuestionB: resp.votingQuestionB,
@@ -76,6 +83,7 @@ useEffect(() => {
   };
 
   const handleNextClick = () => {
+    console.log("next click runs")
     const reqObj = {
       method: "PATCH",
       headers: {
@@ -84,14 +92,18 @@ useEffect(() => {
       body: JSON.stringify({
         user: {
           room: props.match.params.id,
-          currentPlayer: gameRound.currentPlayer,
+          currentPlayerID: gameRound.currentPlayerID,
         },
         question: {
           id: gameRound.currentQuestion.id,
         },
       }),
     };
-    fetch(`http://localhost:3000/users/select/foo`, reqObj);
+    return fetch(`http://localhost:3000/users/select/foo`, reqObj)
+      .catch(error => {
+        console.log("Error", error)
+        throw error
+      })
   };
 
   const handleStartClick = () => {
@@ -127,9 +139,10 @@ useEffect(() => {
   //   };
 
   const playerButton = () => {
+    //props.currentUser is to track the individual user on their device, gameRound tracks whose turn it is
     if (
       props.currentUser.id === props.hostID ||
-      props.currentUser.username === gameRound.currentPlayer
+      props.currentUser.id === gameRound.currentPlayerID
     ) {
       return (
         <button className="MainBtn" onClick={handleNextClick}>
@@ -143,6 +156,11 @@ useEffect(() => {
 
   const logoutBtn = async () => {
     let id = props.currentUser.id;
+    if (gameRound.currentPlayerID === id) {
+      handleNextClick()
+      // also worked with await here, but with that it keeps the player name in the lobby till the following turn. having both execute back to back makes it look all at once
+    }
+    console.log("right after next click function", gameRound.currentPlayer)
     const reqObj = {
       method: "DELETE",
       headers: {
@@ -155,8 +173,8 @@ useEffect(() => {
         },
       }),
     };
-    const resp = await fetch(`http://localhost:3000/users/${id}`, reqObj)
-      try{
+    try{
+    await fetch(`http://localhost:3000/users/${id}`, reqObj)
         localStorage.removeItem("token");
         props.history.push(`/`);
       } catch (error) {
@@ -180,7 +198,6 @@ useEffect(() => {
     };
     const resp = await fetch(`http://localhost:3000/rooms/${id}`, reqObj)
       try{
-        endGame()
         localStorage.removeItem("token");
         props.history.push(`/`);
       } catch (error) {
