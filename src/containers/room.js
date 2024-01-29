@@ -27,8 +27,8 @@ const Room = (props) => {
     //   timerIntervalID: "",
     // ^^ to be used for voting feature
   });
-console.log(gameRound)
-useEffect(() => {
+
+  useEffect(() => {
   //here to load inital waiting room of players, only runs if game hasn't officially started
   if (!props.gameStartedWaiting) {
   const fetchUsers = async () => {
@@ -49,11 +49,8 @@ useEffect(() => {
 } 
 }, []);
 
-  const endGame = () => {
-    // setGameStarted(false);
-  };
-
   const handleReceived = (resp) => {
+    console.log(resp)
     if (resp.room.game_started && resp.currentQuestion) {
       //for use when game has started and players is active in game, resp.currentQuestion filters out players joining midgame
       setGameRound({
@@ -78,6 +75,7 @@ useEffect(() => {
   };
 
   const handleNextClick = () => {
+    console.log("next click runs")
     const reqObj = {
       method: "PATCH",
       headers: {
@@ -93,7 +91,11 @@ useEffect(() => {
         },
       }),
     };
-    fetch(`http://localhost:3000/users/select/foo`, reqObj);
+    return fetch(`http://localhost:3000/users/select/foo`, reqObj)
+      .catch(error => {
+        console.log("Error", error)
+        throw error
+      })
   };
 
   const handleStartClick = () => {
@@ -146,6 +148,11 @@ useEffect(() => {
 
   const logoutBtn = async () => {
     let id = props.currentUser.id;
+    if (gameRound.currentPlayerID === id) {
+      handleNextClick()
+      // also worked with await here, but with that it keeps the player name in the lobby till the following turn. having both execute back to back makes it look all at once
+    }
+    console.log("right after next click function", gameRound.currentPlayer)
     const reqObj = {
       method: "DELETE",
       headers: {
@@ -158,8 +165,8 @@ useEffect(() => {
         },
       }),
     };
-    const resp = await fetch(`http://localhost:3000/users/${id}`, reqObj)
-      try{
+    try{
+    await fetch(`http://localhost:3000/users/${id}`, reqObj)
         localStorage.removeItem("token");
         props.history.push(`/`);
       } catch (error) {
@@ -183,7 +190,6 @@ useEffect(() => {
     };
     const resp = await fetch(`http://localhost:3000/rooms/${id}`, reqObj)
       try{
-        endGame()
         localStorage.removeItem("token");
         props.history.push(`/`);
       } catch (error) {
