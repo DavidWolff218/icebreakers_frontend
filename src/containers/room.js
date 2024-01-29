@@ -83,7 +83,6 @@ const Room = (props) => {
   };
 
   const handleNextClick = () => {
-    console.log("next click runs")
     const reqObj = {
       method: "PATCH",
       headers: {
@@ -160,7 +159,6 @@ const Room = (props) => {
       handleNextClick()
       // also worked with await here, but with that it keeps the player name in the lobby till the following turn. having both execute back to back makes it look all at once
     }
-    console.log("right after next click function", gameRound.currentPlayer)
     const reqObj = {
       method: "DELETE",
       headers: {
