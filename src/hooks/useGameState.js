@@ -1,7 +1,8 @@
-import {useState} from react
-
+import {useState} from "react"
 
 const useGameState = (props) => {
+
+  //moved from .room, used to handel anything recieved from backend or updating state
 
   const [gameRound, setGameRound] = useState({
     currentPlayer: "",
@@ -50,6 +51,39 @@ const useGameState = (props) => {
       return;
     } 
   };
+
+
+//also took these from room.js..not sure if keeping here
+  const resetUsersAndQuestionsShuffle = () => {
+    setGameRound((prev) => ({
+      ...prev,
+      reshufflingUsers: false,
+      reshufflingQuestions: false,
+    }));
+  };
+
+  const resetUsersShuffle = () => {
+    setGameRound((prev) => ({
+      ...prev,
+      reshufflingUsers: false,
+    }));
+  };
+
+  const resetQuestionsShuffle = () => {
+    setGameRound((prev) => ({
+      ...prev,
+      reshufflingQuestions: false,
+    }));
+  };
+
+  return {
+    gameRound,
+    setGameRound,
+    handleReceived,
+    resetUsersAndQuestionsShuffle,
+    resetQuestionsShuffle,
+    resetUsersShuffle
+  }
 
 }
 

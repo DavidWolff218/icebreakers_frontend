@@ -5,82 +5,43 @@ import GameText from "../components/gameText";
 import NavBar from "../components/navBar";
 import { Row, Col } from "react-bootstrap";
 import WaitingRoom from "../components/waitingRoom";
+import useGameState from "../hooks/useGameState";
 
 const Room = (props) => {
-
   // const [gameStarted, setGameStarted] = useState(false);
   // keeping this here for Reference, originally used in useEffect conditional (false),
   // handleReceived(if/true, else/if/false for gameStarted trigger/1st play), waitingText(if/false, elseif/false),
   // and in return statment ternary for screentText or waiting Text
 
-  // const [gameRound, setGameRound] = useState({
-  //   currentPlayer: "",
-  //   currentPlayerID: "",
-  //   currentQuestion: {},
-  //   votingQuestionA: "",
-  //   votingQuestionB: "",
-  //   reshufflingUsers: false,
-  //   reshufflingQuestions: false,
-  //   allUsers: [],
-  //   //   timerRunning: false,
-  //   //   timerSeconds: 5,
-  //   //   timerIntervalID: "",
-  //   // ^^ to be used for voting feature
-  // });
+  const {
+    gameRound,
+    setGameRound,
+    handleReceived,
+    resetUsersAndQuestionsShuffle,
+    resetQuestionsShuffle,
+    resetUsersShuffle,
+  } = useGameState();
 
   useEffect(() => {
-  //here to load inital waiting room of players, only runs if game hasn't officially started
-  if (!props.gameStartedWaiting) {
-  const fetchUsers = async () => {
-    try {
-      const roomId = props.match.params.id;
-      const resp = await fetch(
-        `http://localhost:3000/users/by_room/${roomId}`
-      );
-      const data = await resp.json();
-      setGameRound({
-        allUsers: data.allUsers,
-      });
-    } catch (error) {
-      console.log(error);
+    //here to load inital waiting room of players, only runs if game hasn't officially started
+    if (!props.gameStartedWaiting) {
+      const fetchUsers = async () => {
+        try {
+          const roomId = props.match.params.id;
+          const resp = await fetch(
+            `http://localhost:3000/users/by_room/${roomId}`
+          );
+          const data = await resp.json();
+          setGameRound({
+            allUsers: data.allUsers,
+          });
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      fetchUsers();
     }
-  };
-  fetchUsers();
-} 
-}, []);
-
-  // const handleReceived = (resp) => {
-    
-  //   if (resp.endGame) {
-  //     //runs this check to see if host ended game
-  //     //add popup here to inform user
-  //     localStorage.removeItem("token");
-  //     props.history.push(`/`);
-  //     return
-  //   }
-
-  //   if (resp.room.game_started && resp.currentQuestion) {
-  //     //for use when game has started and players is active in game, resp.currentQuestion filters out players joining midgame
-  //     setGameRound({
-  //       currentPlayer: resp.currentPlayer.username,
-  //       currentPlayerID: resp.currentPlayer.id,
-  //       currentQuestion: resp.currentQuestion,
-  //       votingQuestionA: resp.votingQuestionA,
-  //       votingQuestionB: resp.votingQuestionB,
-  //       reshufflingUsers: resp.reshufflingUsers,
-  //       reshufflingQuestions: resp.reshufflingQuestions,
-  //       allUsers: resp.allUsers,
-  //       // add voting timer stuff here
-  //     });
-  //     return;
-  //   } else if (!resp.room.game_started) {
-  //     //used for updating lobby of users as new ones come in
-  //     setGameRound({
-  //       allUsers: resp.allUsers,
-  //     });
-  //     return;
-  //   } 
-  // };
+  }, []);
 
   const handleNextClick = () => {
     const reqObj = {
@@ -98,11 +59,12 @@ const Room = (props) => {
         },
       }),
     };
-    return fetch(`http://localhost:3000/users/select/foo`, reqObj)
-      .catch(error => {
-        console.log("Error", error)
-        throw error
-      })
+    return fetch(`http://localhost:3000/users/select/foo`, reqObj).catch(
+      (error) => {
+        console.log("Error", error);
+        throw error;
+      }
+    );
   };
 
   const handleStartClick = () => {
@@ -156,7 +118,7 @@ const Room = (props) => {
   const logoutBtn = async () => {
     let id = props.currentUser.id;
     if (gameRound.currentPlayerID === id) {
-      handleNextClick()
+      handleNextClick();
       // also worked with await here, but with that it keeps the player name in the lobby till the following turn. having both execute back to back makes it look all at once
     }
     const reqObj = {
@@ -171,13 +133,13 @@ const Room = (props) => {
         },
       }),
     };
-    try{
-    await fetch(`http://localhost:3000/users/${id}`, reqObj)
-        localStorage.removeItem("token");
-        props.history.push(`/`);
-      } catch (error) {
-        console.log(error)
-      }
+    try {
+      await fetch(`http://localhost:3000/users/${id}`, reqObj);
+      localStorage.removeItem("token");
+      props.history.push(`/`);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const endGameBtn = async () => {
@@ -194,35 +156,13 @@ const Room = (props) => {
         },
       }),
     };
-    const resp = await fetch(`http://localhost:3000/rooms/${id}`, reqObj)
-      try{
-        localStorage.removeItem("token");
-        props.history.push(`/`);
-      } catch (error) {
-        console.log(error)
-      }
-  };
-
-  const resetUsersAndQuestionsShuffle = () => {
-    setGameRound((prev) => ({
-      ...prev,
-      reshufflingUsers: false,
-      reshufflingQuestions: false,
-    }));
-  };
-
-  const resetUsersShuffle = () => {
-    setGameRound((prev) => ({
-      ...prev,
-      reshufflingUsers: false,
-    }));
-  };
-
-  const resetQuestionsShuffle = () => {
-    setGameRound((prev) => ({
-      ...prev,
-      reshufflingQuestions: false,
-    }));
+    const resp = await fetch(`http://localhost:3000/rooms/${id}`, reqObj);
+    try {
+      localStorage.removeItem("token");
+      props.history.push(`/`);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const screenText = () => {
@@ -254,17 +194,19 @@ const Room = (props) => {
 
   const waitingText = () => {
     if (!props.gameStartedWaiting) {
-    return <WaitingRoom
-    hostID={props.hostID}
-    hostName={props.hostName}
-    currentUserId={props.currentUser.id}
-    handleStartClick={handleStartClick}
-    users={gameRound.allUsers}
-  />
+      return (
+        <WaitingRoom
+          hostID={props.hostID}
+          hostName={props.hostName}
+          currentUserId={props.currentUser.id}
+          handleStartClick={handleStartClick}
+          users={gameRound.allUsers}
+        />
+      );
     } else if (props.gameStartedWaiting) {
-      return "you will be added in the next round"
+      return "you will be added in the next round";
     }
-  }
+  };
 
   return (
     <div>
@@ -290,12 +232,8 @@ const Room = (props) => {
         <Col className="align-self-center">
           <Row className="seventy-five-row-seperator" />
           {/* this displays the gameplay text (questions, players, button etc) or the waiting room */}
-            {/* This conditional is to check if the game is active for the current player window, shortened it from gameRound.currentQuestion && Object.keys(gameRound.currentQuestion).length > 0 */}
-           {gameRound.currentPlayer ? (
-            screenText()
-            ) : (
-            waitingText()
-          )}
+          {/* This conditional is to check if the game is active for the current player window, shortened it from gameRound.currentQuestion && Object.keys(gameRound.currentQuestion).length > 0 */}
+          {gameRound.currentPlayer ? screenText() : waitingText()}
           <Row className="seventy-five-row-seperator" />
           {/* this ^^^ kept after removing startbutton from here to keep css in order */}
         </Col>
