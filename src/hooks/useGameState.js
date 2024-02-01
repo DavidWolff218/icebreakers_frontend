@@ -2,7 +2,7 @@ import {useState} from "react"
 
 const useGameState = (props) => {
 
-  //moved from .room, used to handel anything recieved from backend or updating state
+  //moved from .room, used to handle anything recieved from backend or updating state
 
   const [gameRound, setGameRound] = useState({
     currentPlayer: "",

@@ -43,43 +43,57 @@ const Room = (props) => {
     }
   }, []);
 
-  const handleNextClick = () => {
-    const reqObj = {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        user: {
-          room: props.match.params.id,
-          currentPlayerID: gameRound.currentPlayerID,
+  const handleNextClick = async () => {
+    try {
+      const reqObj = {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
         },
-        question: {
-          id: gameRound.currentQuestion.id,
-        },
-      }),
-    };
-    return fetch(`http://localhost:3000/users/select/foo`, reqObj).catch(
-      (error) => {
-        console.log("Error", error);
-        throw error;
+        body: JSON.stringify({
+          user: {
+            room: props.match.params.id,
+            currentPlayerID: gameRound.currentPlayerID,
+          },
+          question: {
+            id: gameRound.currentQuestion.id,
+          },
+        }),
+      };
+      const resp = await fetch(
+        `http://localhost:3000/users/select/foo`,
+        reqObj
+      );
+      if (!resp.ok) {
+        throw new Error(`HTTP error! Status: ${resp.status}`);
       }
-    );
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
   };
 
-  const handleStartClick = () => {
-    const reqObj = {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        user: {
-          room: props.match.params.id,
+  const handleStartClick = async () => {
+    try {
+      const reqObj = {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
         },
-      }),
-    };
-    fetch(`http://localhost:3000/users/start/foo`, reqObj);
+        body: JSON.stringify({
+          user: {
+            room: props.match.params.id,
+          },
+        }),
+      };
+      const resp = await fetch(`http://localhost:3000/users/start/foo`, reqObj);
+      if (!resp.ok) {
+        throw new Error(`HTTP error! Status: ${resp.status}`);
+      }
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
   };
 
   //  const handleVote = (vote) => {
