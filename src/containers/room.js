@@ -17,6 +17,7 @@ const Room = (props) => {
     gameRound,
     setGameRound,
     handleReceived,
+    hostEnd,
     resetUsersAndQuestionsShuffle,
     resetQuestionsShuffle,
     resetUsersShuffle,
@@ -42,6 +43,15 @@ const Room = (props) => {
       fetchUsers();
     }
   }, []);
+
+  useEffect(() => {
+    if (hostEnd) {
+      // Show modal
+      // ...
+      localStorage.removeItem("token");
+        props.history.push(`/`);
+    }
+  }, [hostEnd]);
 
   const handleNextClick = async () => {
     try {
