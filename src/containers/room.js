@@ -46,10 +46,10 @@ const Room = (props) => {
 
   useEffect(() => {
     if (hostEnd) {
-      // Show modal
-      // ...
-      localStorage.removeItem("token");
+      setTimeout(() => {
+        localStorage.removeItem("token");
         props.history.push(`/`);
+      }, 3000)
     }
   }, [hostEnd]);
 

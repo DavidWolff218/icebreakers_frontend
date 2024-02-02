@@ -25,6 +25,7 @@ const useGameState = (props) => {
     
     if (resp.endGame) {
       //this resp only exists when the host ends game
+      //? Do I want to update all game values to empty strings? UI experience
       setHostEnd(true)
     }
 
