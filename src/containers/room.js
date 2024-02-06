@@ -6,6 +6,8 @@ import NavBar from "../components/navBar";
 import { Row, Col } from "react-bootstrap";
 import WaitingRoom from "../components/waitingRoom";
 import useGameState from "../hooks/useGameState";
+import EndGameModal from "../components/endGameModal";
+import { Modal } from "react-bootstrap";
 
 const Room = (props) => {
   // const [gameStarted, setGameStarted] = useState(false);
@@ -17,6 +19,7 @@ const Room = (props) => {
     gameRound,
     setGameRound,
     handleReceived,
+    hostEnd,
     resetUsersAndQuestionsShuffle,
     resetQuestionsShuffle,
     resetUsersShuffle,
@@ -42,6 +45,16 @@ const Room = (props) => {
       fetchUsers();
     }
   }, []);
+
+  useEffect(() => {
+    //this is only for users and not host
+    if (hostEnd) {
+      setTimeout(() => {
+        localStorage.removeItem("token");
+        props.history.push(`/`);
+      }, 5000)
+    }
+  }, [hostEnd]);
 
   const handleNextClick = async () => {
     try {
@@ -222,6 +235,7 @@ const Room = (props) => {
     }
   };
 
+
   return (
     <div>
       <NavBar
@@ -234,7 +248,9 @@ const Room = (props) => {
       />
 
       <br></br>
-
+      {hostEnd ? 
+        <EndGameModal />
+       : null}
       <ActionCableConsumer
         channel={{
           channel: "UsersChannel",

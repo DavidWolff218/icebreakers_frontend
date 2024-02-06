@@ -4,6 +4,8 @@ const useGameState = (props) => {
 
   //moved from .room, used to handle anything recieved from backend or updating state
 
+  const [hostEnd, setHostEnd] = useState(false)
+
   const [gameRound, setGameRound] = useState({
     currentPlayer: "",
     currentPlayerID: "",
@@ -22,14 +24,12 @@ const useGameState = (props) => {
   const handleReceived = (resp) => {
     
     if (resp.endGame) {
-      //runs this check to see if host ended game
-      //add popup here to inform user
-      localStorage.removeItem("token");
-      props.history.push(`/`);
-      return
+      //this resp only exists when the host ends game
+      //? Do I want to update all game values to empty strings? UI experience
+      setHostEnd(true)
     }
 
-    if (resp.room.game_started && resp.currentQuestion) {
+    if (resp.room && resp.room.game_started && resp.currentQuestion) {
       //for use when game has started and players is active in game, resp.currentQuestion filters out players joining midgame
       setGameRound({
         currentPlayer: resp.currentPlayer.username,
@@ -43,7 +43,7 @@ const useGameState = (props) => {
         // add voting timer stuff here
       });
       return;
-    } else if (!resp.room.game_started) {
+    } else if (resp.room && !resp.room.game_started) {
       //used for updating lobby of users as new ones come in
       setGameRound({
         allUsers: resp.allUsers,
@@ -80,6 +80,7 @@ const useGameState = (props) => {
     gameRound,
     setGameRound,
     handleReceived,
+    hostEnd,
     resetUsersAndQuestionsShuffle,
     resetQuestionsShuffle,
     resetUsersShuffle
