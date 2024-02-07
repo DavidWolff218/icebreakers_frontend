@@ -52,7 +52,7 @@ const Room = (props) => {
       setTimeout(() => {
         localStorage.removeItem("token");
         props.history.push(`/`);
-      }, 5000)
+      }, 5000);
     }
   }, [hostEnd]);
 
@@ -235,7 +235,6 @@ const Room = (props) => {
     }
   };
 
-
   return (
     <div>
       <NavBar
@@ -248,9 +247,7 @@ const Room = (props) => {
       />
 
       <br></br>
-      {hostEnd ? 
-        <EndGameModal />
-       : null}
+      {hostEnd && <EndGameModal />}
       <ActionCableConsumer
         channel={{
           channel: "UsersChannel",
