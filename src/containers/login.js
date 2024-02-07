@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import icebreakersv8 from "../logo/icebreakersv8.png";
 import { Container, Row, Col } from "react-bootstrap";
 
-const Login = (props) => {
+const Login = ({setCreateRoom, history}) => {
   //check for users not fully filling in fields. need to implement checks
   const [loginForm, setLoginForm] = useState({
     room_name: "",
@@ -39,7 +39,7 @@ const Login = (props) => {
       const data = await resp.json();
       if (resp.ok) {
         localStorage.setItem("token", data.jwt);
-        props.setCreateRoom(
+        setCreateRoom(
           data.user,
           data.room.room_name,
           data.room.host_id,
@@ -51,7 +51,7 @@ const Login = (props) => {
           password: "",
           username: "",
         });
-        props.history.push(`/room/${data.room.id}`);
+        history.push(`/room/${data.room.id}`);
       } else {
         alert(data.error);
       }
