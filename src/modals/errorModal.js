@@ -1,13 +1,13 @@
 import React from "react";
-import { Modal } from "react-bootstrap"
+import { Modal, Button } from "react-bootstrap"
 
-function ErrorModal() {
+function ErrorModal({handleClose, errorText}) {
   return ( <div>
-<Modal show={true} onHide={false}>
+<Modal show={true} onHide={handleClose} centered >
         <Modal.Header closeButton>
-          <Modal.Title>{}</Modal.Title>
+          <Modal.Title>{"Oops!"}</Modal.Title>
         </Modal.Header>
-        <Modal.Body>{}</Modal.Body>
+        <Modal.Body>{errorText}</Modal.Body>
         <Modal.Footer>
           <Button variant="primary" onClick={handleClose}>
             Close

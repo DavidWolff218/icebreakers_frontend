@@ -1,13 +1,22 @@
 import React, { useState } from "react";
 import icebreakersv8 from "../logo/icebreakersv8.png";
 import { Container, Row, Col } from "react-bootstrap";
+import  ErrorModal from '../modals/errorModal'
 
 const CreateRoom = (props) => {
+
+  const [showError, setShowError] = useState(false)
+  const [errorText, setErrorText] = useState("this is test text")
+
   const [createForm, setCreateForm] = useState({
     room_name: "",
     password: "",
     username: "",
   });
+
+  const handleModal = () => {
+    setShowError(!showError)
+  }
 
   const handleChange = (event) => {
     event.persist();
@@ -32,7 +41,9 @@ const CreateRoom = (props) => {
       const resp = await fetch("http://localhost:3000/rooms", reqObj);
       if (!resp.ok) {
         const errorData = await resp.json();
-        throw new Error(errorData.error || "Could not create room");
+        setErrorText(errorData.error || "Could not create room")
+        setShowError(!showError)
+        return
       }
       const data = await resp.json();
       localStorage.setItem("token", data.jwt);
@@ -46,7 +57,7 @@ const CreateRoom = (props) => {
       setCreateForm({ room_name: "", password: "", username: "" });
       props.history.push(`/room/${data.room.id}`);
     } catch (error) {
-      alert(error);
+        alert(error);
     }
   };
 
@@ -100,6 +111,7 @@ const CreateRoom = (props) => {
         <img className="img-fluid" src={icebreakersv8} alt="icebreakers logo" />
       </Row>
       <Row>
+      { showError && <ErrorModal handleClose={handleModal} errorText={errorText}/>}
         <Col className="col" />
         <Col className="max-width-400 col-10 align-self-center">
           {renderForm()}
