@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import icebreakersv8 from "../logo/icebreakersv8.png";
 import { Container, Row, Col } from "react-bootstrap";
+import ErrorModal from "../modals/errorModal";
 
 const Login = ({setCreateRoom, history}) => {
   //check for users not fully filling in fields. need to implement checks
@@ -10,11 +11,18 @@ const Login = ({setCreateRoom, history}) => {
     username: "",
   });
 
+  const [showError, setShowError] = useState(false)
+  const [errorText, setErrorText] = useState("Invalid Room Name or Password")
+
   // const handleChange = (event) => {
   //   // setRoom({...room,[event.target.name]: event.target.value})
   // };
   //keeping this as reference for another way to update state...not sure about potential side effects of event.persist below
   //updated state to be more clear loginForm vs room
+
+  const handleModal = () => {
+    setShowError(false)
+  }
 
   const handleChange = (event) => {
     event.persist();
@@ -36,8 +44,13 @@ const Login = ({setCreateRoom, history}) => {
     };
     try {
       const resp = await fetch("http://localhost:3000/", reqObj);
-      const data = await resp.json();
-      if (resp.ok) {
+      if (!resp.ok) {
+        const errorData = await resp.json();
+        setErrorText(errorData.error || "Invalid Room Name or Password")
+        setShowError(true)
+        return
+      } 
+        const data = await resp.json();
         localStorage.setItem("token", data.jwt);
         setCreateRoom(
           data.user,
@@ -52,11 +65,8 @@ const Login = ({setCreateRoom, history}) => {
           username: "",
         });
         history.push(`/room/${data.room.id}`);
-      } else {
-        alert(data.error);
-      }
     } catch (error) {
-      alert("here", error);
+      alert(error);
     }
   };
 
@@ -104,6 +114,7 @@ const Login = ({setCreateRoom, history}) => {
         <img className="img-fluid" src={icebreakersv8} alt="icebreakers logo" />
       </Row>
       <Row>
+        {showError && <ErrorModal  handleClose={handleModal} errorText={errorText}/>}
         <Col className="col" />
         <Col className="max-width-400 col-10 align-self-center">
           {renderForm()}

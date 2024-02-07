@@ -6,7 +6,7 @@ import  ErrorModal from '../modals/errorModal'
 const CreateRoom = (props) => {
 
   const [showError, setShowError] = useState(false)
-  const [errorText, setErrorText] = useState("this is test text")
+  const [errorText, setErrorText] = useState("Could not create room")
 
   const [createForm, setCreateForm] = useState({
     room_name: "",
@@ -15,7 +15,7 @@ const CreateRoom = (props) => {
   });
 
   const handleModal = () => {
-    setShowError(!showError)
+    setShowError(false)
   }
 
   const handleChange = (event) => {
@@ -42,7 +42,7 @@ const CreateRoom = (props) => {
       if (!resp.ok) {
         const errorData = await resp.json();
         setErrorText(errorData.error || "Could not create room")
-        setShowError(!showError)
+        setShowError(true)
         return
       }
       const data = await resp.json();
