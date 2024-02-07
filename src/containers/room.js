@@ -6,7 +6,7 @@ import NavBar from "../components/navBar";
 import { Row, Col } from "react-bootstrap";
 import WaitingRoom from "../components/waitingRoom";
 import useGameState from "../hooks/useGameState";
-import EndGameModal from "../components/endGameModal";
+import EndGameModal from "../modals/endGameModal";
 import { Modal } from "react-bootstrap";
 
 const Room = (props) => {
