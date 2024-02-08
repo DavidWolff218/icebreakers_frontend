@@ -1,9 +1,18 @@
 import React from "react";
 // import Voting from "./voting";
 
-const gameText = (props) => {
+const gameText = ({
+  currentPlayer,
+  currentQuestion,
+  playerButton,
+  reshufflingUsers,
+  reshufflingQuestions,
+  resetQuestionsShuffle,
+  resetUsersAndQuestionsShuffle,
+  resetUsersShuffle,
+}) => {
   const renderGameText = () => {
-    let player = props.currentPlayer;
+    let player = currentPlayer;
     // if (props.votingQuestionA) {
     //   return (
     //     <Voting
@@ -22,9 +31,9 @@ const gameText = (props) => {
     return (
       <div>
         <h3 className="currentPlayer">{player}</h3>
-        <h3 className="currentQuestion">{props.currentQuestion.content}</h3>
+        <h3 className="currentQuestion">{currentQuestion.content}</h3>
         <br></br>
-        {props.playerButton()}
+        {playerButton()}
       </div>
     );
     // }
@@ -35,14 +44,14 @@ const gameText = (props) => {
   };
 
   const gameText = () => {
-    if (props.reshufflingQuestions && props.reshufflingUsers) {
-      callReset(props.resetUsersAndQuestionsShuffle);
+    if (reshufflingQuestions && reshufflingUsers) {
+      callReset(resetUsersAndQuestionsShuffle);
       return <h3>Reshuffling Questions and Users...</h3>;
-    } else if (props.reshufflingUsers) {
-      callReset(props.resetUsersShuffle);
+    } else if (reshufflingUsers) {
+      callReset(resetUsersShuffle);
       return <h3>Reshuffling Users...</h3>;
-    } else if (props.reshufflingQuestions) {
-      callReset(props.resetQuestionsShuffle);
+    } else if (reshufflingQuestions) {
+      callReset(resetQuestionsShuffle);
       return <h3>Reshuffling Questions...</h3>;
     } else {
       return renderGameText();

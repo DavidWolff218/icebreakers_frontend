@@ -2,7 +2,7 @@ import React from "react";
 import icebreakersv8 from "../logo/icebreakersv8.png";
 import { Row, Col } from "react-bootstrap";
 
-const navBar = ({currentUser, host, endGameBtn, logoutBtn, room}) => {
+const navBar = ({ currentUser, host, endGameBtn, logoutBtn, room }) => {
   //Do we need to have this as a function or can it be a variable
   const logOutBtn = () => {
     if (currentUser === host) {
