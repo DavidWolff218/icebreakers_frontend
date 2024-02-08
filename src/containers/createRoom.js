@@ -6,7 +6,7 @@ import  ErrorModal from '../modals/errorModal'
 const CreateRoom = (props) => {
 
   const [showError, setShowError] = useState(false)
-  const [errorText, setErrorText] = useState("Could not create room")
+  const [errorText, setErrorText] = useState("Could Not Create Room")
 
   const [createForm, setCreateForm] = useState({
     room_name: "",
@@ -57,7 +57,9 @@ const CreateRoom = (props) => {
       setCreateForm({ room_name: "", password: "", username: "" });
       props.history.push(`/room/${data.room.id}`);
     } catch (error) {
-        alert(error);
+      setErrorText(error || "Could Not Create Room")
+      setShowError(true)
+      return
     }
   };
 

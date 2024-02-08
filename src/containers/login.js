@@ -12,7 +12,7 @@ const Login = ({setCreateRoom, history}) => {
   });
 
   const [showError, setShowError] = useState(false)
-  const [errorText, setErrorText] = useState("Invalid Room Name or Password")
+  const [errorText, setErrorText] = useState("Invalid Room Name or Password or Username")
 
   // const handleChange = (event) => {
   //   // setRoom({...room,[event.target.name]: event.target.value})
@@ -46,7 +46,7 @@ const Login = ({setCreateRoom, history}) => {
       const resp = await fetch("http://localhost:3000/", reqObj);
       if (!resp.ok) {
         const errorData = await resp.json();
-        setErrorText(errorData.error || "Invalid Room Name or Password")
+        setErrorText(errorData.error || "Invalid Room Name or Password or Username")
         setShowError(true)
         return
       } 
@@ -66,7 +66,9 @@ const Login = ({setCreateRoom, history}) => {
         });
         history.push(`/room/${data.room.id}`);
     } catch (error) {
-      alert(error);
+        setErrorText(error || "Could Not Login to Room")
+        setShowError(true)
+        return
     }
   };
 
