@@ -12,7 +12,7 @@ const gameText = ({
   resetUsersShuffle,
 }) => {
   const renderGameText = () => {
-    let player = currentPlayer;
+
     // if (props.votingQuestionA) {
     //   return (
     //     <Voting
@@ -30,7 +30,7 @@ const gameText = ({
     // } else {
     return (
       <div>
-        <h3 className="currentPlayer">{player}</h3>
+        <h3 className="currentPlayer">{currentPlayer}</h3>
         <h3 className="currentQuestion">{currentQuestion.content}</h3>
         <br></br>
         {playerButton()}
