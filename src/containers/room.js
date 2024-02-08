@@ -8,7 +8,7 @@ import WaitingRoom from "../components/waitingRoom";
 import useGameState from "../hooks/useGameState";
 import EndGameModal from "../modals/endGameModal";
 
-const Room = (props) => {
+const Room = ({gameStartedWaiting, match, history, currentUser, hostID, hostName, roomName }) => {
   // const [gameStarted, setGameStarted] = useState(false);
   // keeping this here for Reference, originally used in useEffect conditional (false),
   // handleReceived(if/true, else/if/false for gameStarted trigger/1st play), waitingText(if/false, elseif/false),
@@ -26,10 +26,10 @@ const Room = (props) => {
 
   useEffect(() => {
     //here to load inital waiting room of players, only runs if game hasn't officially started
-    if (!props.gameStartedWaiting) {
+    if (!gameStartedWaiting) {
       const fetchUsers = async () => {
         try {
-          const roomId = props.match.params.id;
+          const roomId = match.params.id;
           const resp = await fetch(
             `http://localhost:3000/users/by_room/${roomId}`
           );
@@ -50,11 +50,11 @@ const Room = (props) => {
     if (hostEnd) {
       setTimeout(() => {
         localStorage.removeItem("token");
-        props.history.push(`/`);
+        history.push(`/`);
       }, 5000);
     }
   }, [hostEnd]);
-  //getting a warning from react about not including props.history in the dependency array..ignoring that
+  //getting a warning from react about not including history in the dependency array..ignoring that
 
   const handleNextClick = async () => {
     try {
@@ -65,7 +65,7 @@ const Room = (props) => {
         },
         body: JSON.stringify({
           user: {
-            room: props.match.params.id,
+            room: match.params.id,
             currentPlayerID: gameRound.currentPlayerID,
           },
           question: {
@@ -95,7 +95,7 @@ const Room = (props) => {
         },
         body: JSON.stringify({
           user: {
-            room: props.match.params.id,
+            room: match.params.id,
           },
         }),
       };
@@ -127,10 +127,10 @@ const Room = (props) => {
   //   };
 
   const playerButton = () => {
-    //props.currentUser is to track the individual user on their device, gameRound tracks whose turn it is
+    //currentUser is to track the individual user on their device, gameRound tracks whose turn it is
     if (
-      props.currentUser.id === props.hostID ||
-      props.currentUser.id === gameRound.currentPlayerID
+      currentUser.id === hostID ||
+      currentUser.id === gameRound.currentPlayerID
     ) {
       return (
         <button className="MainBtn" onClick={handleNextClick}>
@@ -143,7 +143,7 @@ const Room = (props) => {
   };
 
   const logoutBtn = async () => {
-    let id = props.currentUser.id;
+    let id = currentUser.id;
     if (gameRound.currentPlayerID === id) {
       handleNextClick();
       // also worked with await here, but with that it keeps the player name in the lobby till the following turn. having both execute back to back makes it look all at once
@@ -163,14 +163,14 @@ const Room = (props) => {
     try {
       await fetch(`http://localhost:3000/users/${id}`, reqObj);
       localStorage.removeItem("token");
-      props.history.push(`/`);
+      history.push(`/`);
     } catch (error) {
       console.log(error);
     }
   };
 
   const endGameBtn = async () => {
-    let id = props.match.params.id;
+    let id = match.params.id;
     const reqObj = {
       method: "DELETE",
       headers: {
@@ -186,7 +186,7 @@ const Room = (props) => {
     await fetch(`http://localhost:3000/rooms/${id}`, reqObj);
     try {
       localStorage.removeItem("token");
-      props.history.push(`/`);
+      history.push(`/`);
     } catch (error) {
       console.log(error);
     }
@@ -220,17 +220,17 @@ const Room = (props) => {
   };
 
   const waitingText = () => {
-    if (!props.gameStartedWaiting) {
+    if (!gameStartedWaiting) {
       return (
         <WaitingRoom
-          hostID={props.hostID}
-          hostName={props.hostName}
-          currentUserId={props.currentUser.id}
+          hostID={hostID}
+          hostName={hostName}
+          currentUserId={currentUser.id}
           handleStartClick={handleStartClick}
           users={gameRound.allUsers}
         />
       );
-    } else if (props.gameStartedWaiting) {
+    } else if (gameStartedWaiting) {
       return "you will be added in the next round";
     }
   };
@@ -238,12 +238,12 @@ const Room = (props) => {
   return (
     <div>
       <NavBar
-        room={props.roomName}
+        room={roomName}
         logoutBtn={logoutBtn}
         endGameBtn={endGameBtn}
-        currentUser={props.currentUser.id}
-        host={props.hostID}
-        player={props.currentUser.username}
+        currentUser={currentUser.id}
+        host={hostID}
+        player={currentUser.username}
       />
 
       <br></br>
@@ -251,7 +251,7 @@ const Room = (props) => {
       <ActionCableConsumer
         channel={{
           channel: "UsersChannel",
-          room: props.match.params.id,
+          room: match.params.id,
         }}
         onReceived={handleReceived}
       >
