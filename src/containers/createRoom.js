@@ -3,7 +3,7 @@ import icebreakersv8 from "../logo/icebreakersv8.png";
 import { Container, Row, Col } from "react-bootstrap";
 import  ErrorModal from '../modals/errorModal'
 
-const CreateRoom = (props) => {
+const CreateRoom = ({setCreateRoom, history}) => {
 
   const [showError, setShowError] = useState(false)
   const [errorText, setErrorText] = useState("Could Not Create Room")
@@ -47,7 +47,7 @@ const CreateRoom = (props) => {
       }
       const data = await resp.json();
       localStorage.setItem("token", data.jwt);
-      props.setCreateRoom(
+      setCreateRoom(
         data.user,
         data.room.room_name,
         data.room.host_id,
@@ -55,7 +55,7 @@ const CreateRoom = (props) => {
         data.room.game_started
       );
       setCreateForm({ room_name: "", password: "", username: "" });
-      props.history.push(`/room/${data.room.id}`);
+      history.push(`/room/${data.room.id}`);
     } catch (error) {
       setErrorText(error || "Could Not Create Room")
       setShowError(true)
