@@ -2,18 +2,18 @@ import React from "react";
 import icebreakersv8 from "../logo/icebreakersv8.png";
 import { Row, Col } from "react-bootstrap";
 
-const navBar = (props) => {
+const navBar = ({currentUser, host, endGameBtn, logoutBtn, room}) => {
   //Do we need to have this as a function or can it be a variable
   const logOutBtn = () => {
-    if (props.currentUser === props.host) {
+    if (currentUser === host) {
       return (
-        <button className="LogoutBtn" onClick={props.endGameBtn}>
+        <button className="LogoutBtn" onClick={endGameBtn}>
           End Game
         </button>
       );
     } else {
       return (
-        <button className="LogoutBtn" onClick={props.logoutBtn}>
+        <button className="LogoutBtn" onClick={logoutBtn}>
           Logout
         </button>
       );
@@ -33,7 +33,7 @@ const navBar = (props) => {
           </Col>
         </Row>
         <Row>
-          <Col>{props.room}</Col>
+          <Col>{room}</Col>
         </Row>
       </Col>
     </Row>
