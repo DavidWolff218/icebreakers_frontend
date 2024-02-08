@@ -117,7 +117,7 @@ const Room = ({gameStartedWaiting, match, history, currentUser, hostID, hostName
   //       },
   //       body: JSON.stringify({
   //         user: {
-  //           room: props.match.params.id,
+  //           room: match.params.id,
   //           vote_id: vote,
   //           currentPlayer: gameRound.currentPlayer,
   //         },
