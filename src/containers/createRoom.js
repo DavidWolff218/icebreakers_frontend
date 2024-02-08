@@ -1,18 +1,26 @@
 import React, { useState } from "react";
 import icebreakersv8 from "../logo/icebreakersv8.png";
 import { Container, Row, Col } from "react-bootstrap";
+import  ErrorModal from '../modals/errorModal'
 
 const CreateRoom = (props) => {
+
+  const [showError, setShowError] = useState(false)
+  const [errorText, setErrorText] = useState("Could Not Create Room")
+
   const [createForm, setCreateForm] = useState({
     room_name: "",
     password: "",
     username: "",
   });
 
+  const handleModal = () => {
+    setShowError(false)
+  }
+
   const handleChange = (event) => {
-    event.persist()
-    setCreateForm((prev) => 
-    ({
+    event.persist();
+    setCreateForm((prev) => ({
       ...prev,
       [event.target.name]: event.target.value,
     }));
@@ -30,20 +38,28 @@ const CreateRoom = (props) => {
     };
     //add condtional below if needed for rendering error on screen
     try {
-      const resp = await fetch ("http://localhost:3000/rooms", reqObj)
-      const data = await resp.json()
-          localStorage.setItem("token", data.jwt);
-          props.setCreateRoom(
-            data.user,
-            data.room.room_name,
-            data.room.host_id,
-            data.room.host_name,
-            data.room.game_started
-          );
-          setCreateForm({ room_name: "", password: "", username: "" });
-          props.history.push(`/room/${data.room.id}`);
+      const resp = await fetch("http://localhost:3000/rooms", reqObj);
+      if (!resp.ok) {
+        const errorData = await resp.json();
+        setErrorText(errorData.error || "Could not create room")
+        setShowError(true)
+        return
+      }
+      const data = await resp.json();
+      localStorage.setItem("token", data.jwt);
+      props.setCreateRoom(
+        data.user,
+        data.room.room_name,
+        data.room.host_id,
+        data.room.host_name,
+        data.room.game_started
+      );
+      setCreateForm({ room_name: "", password: "", username: "" });
+      props.history.push(`/room/${data.room.id}`);
     } catch (error) {
-      alert (error)
+      setErrorText(error || "Could Not Create Room")
+      setShowError(true)
+      return
     }
   };
 
@@ -97,6 +113,7 @@ const CreateRoom = (props) => {
         <img className="img-fluid" src={icebreakersv8} alt="icebreakers logo" />
       </Row>
       <Row>
+      { showError && <ErrorModal handleClose={handleModal} errorText={errorText}/>}
         <Col className="col" />
         <Col className="max-width-400 col-10 align-self-center">
           {renderForm()}

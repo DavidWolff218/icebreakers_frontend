@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import icebreakersv8 from "../logo/icebreakersv8.png";
 import { Container, Row, Col } from "react-bootstrap";
+import ErrorModal from "../modals/errorModal";
 
-const Login = (props) => {
+const Login = ({setCreateRoom, history}) => {
   //check for users not fully filling in fields. need to implement checks
   const [loginForm, setLoginForm] = useState({
     room_name: "",
@@ -10,11 +11,18 @@ const Login = (props) => {
     username: "",
   });
 
+  const [showError, setShowError] = useState(false)
+  const [errorText, setErrorText] = useState("Invalid Room Name or Password or Username")
+
   // const handleChange = (event) => {
   //   // setRoom({...room,[event.target.name]: event.target.value})
   // };
   //keeping this as reference for another way to update state...not sure about potential side effects of event.persist below
   //updated state to be more clear loginForm vs room
+
+  const handleModal = () => {
+    setShowError(false)
+  }
 
   const handleChange = (event) => {
     event.persist();
@@ -36,10 +44,15 @@ const Login = (props) => {
     };
     try {
       const resp = await fetch("http://localhost:3000/", reqObj);
-      const data = await resp.json();
-      if (resp.ok) {
+      if (!resp.ok) {
+        const errorData = await resp.json();
+        setErrorText(errorData.error || "Invalid Room Name or Password or Username")
+        setShowError(true)
+        return
+      } 
+        const data = await resp.json();
         localStorage.setItem("token", data.jwt);
-        props.setCreateRoom(
+        setCreateRoom(
           data.user,
           data.room.room_name,
           data.room.host_id,
@@ -51,12 +64,11 @@ const Login = (props) => {
           password: "",
           username: "",
         });
-        props.history.push(`/room/${data.room.id}`);
-      } else {
-        alert(data.error);
-      }
+        history.push(`/room/${data.room.id}`);
     } catch (error) {
-      alert("here", error);
+        setErrorText(error || "Could Not Login to Room")
+        setShowError(true)
+        return
     }
   };
 
@@ -104,6 +116,7 @@ const Login = (props) => {
         <img className="img-fluid" src={icebreakersv8} alt="icebreakers logo" />
       </Row>
       <Row>
+        {showError && <ErrorModal  handleClose={handleModal} errorText={errorText}/>}
         <Col className="col" />
         <Col className="max-width-400 col-10 align-self-center">
           {renderForm()}

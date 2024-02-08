@@ -1,8 +1,8 @@
 import React from "react";
 
-const allUsers = (props) => {
+const allUsers = ({users, windowText}) => {
   const renderAllUsers = () => {
-    let allUsersArray = props.users.sort((a, b) => a.id - b.id);
+    let allUsersArray = users.sort((a, b) => a.id - b.id);
 
     return allUsersArray.map((userObj) => {
       return (
@@ -19,7 +19,7 @@ const allUsers = (props) => {
       return (
         <div className="allUsers">
           <h3>
-            <span className="allUsersTitle">{props.windowText}</span>
+            <span className="allUsersTitle">{windowText}</span>
           </h3>
           <div className="allUsersList">{renderAllUsers()}</div>
         </div>

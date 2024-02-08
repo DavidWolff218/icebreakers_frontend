@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { ActionCableConsumer } from "@thrash-industries/react-actioncable-provider";
 import AllUsers from "../components/allUsers";
 import GameText from "../components/gameText";
@@ -6,8 +6,7 @@ import NavBar from "../components/navBar";
 import { Row, Col } from "react-bootstrap";
 import WaitingRoom from "../components/waitingRoom";
 import useGameState from "../hooks/useGameState";
-import EndGameModal from "../components/endGameModal";
-import { Modal } from "react-bootstrap";
+import EndGameModal from "../modals/endGameModal";
 
 const Room = (props) => {
   // const [gameStarted, setGameStarted] = useState(false);
@@ -52,9 +51,10 @@ const Room = (props) => {
       setTimeout(() => {
         localStorage.removeItem("token");
         props.history.push(`/`);
-      }, 5000)
+      }, 5000);
     }
   }, [hostEnd]);
+  //getting a warning from react about not including props.history in the dependency array..ignoring that
 
   const handleNextClick = async () => {
     try {
@@ -183,7 +183,7 @@ const Room = (props) => {
         },
       }),
     };
-    const resp = await fetch(`http://localhost:3000/rooms/${id}`, reqObj);
+    await fetch(`http://localhost:3000/rooms/${id}`, reqObj);
     try {
       localStorage.removeItem("token");
       props.history.push(`/`);
@@ -235,7 +235,6 @@ const Room = (props) => {
     }
   };
 
-
   return (
     <div>
       <NavBar
@@ -248,9 +247,7 @@ const Room = (props) => {
       />
 
       <br></br>
-      {hostEnd ? 
-        <EndGameModal />
-       : null}
+      {hostEnd && <EndGameModal />}
       <ActionCableConsumer
         channel={{
           channel: "UsersChannel",
