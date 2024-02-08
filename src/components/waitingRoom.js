@@ -2,11 +2,11 @@ import React from "react";
 import { Row } from "react-bootstrap";
 import AllUsers from "./allUsers";
 
-const WaitingRoom = (props) => {
+const WaitingRoom = ({handleStartClick, currentUserId, hostID, users, hostName }) => {
   const startButton = () => {
     return (
       <div>
-        <button className="startBtn" onClick={props.handleStartClick}>
+        <button className="startBtn" onClick={handleStartClick}>
           <h3 className="mainBtnText">START GAME</h3>
         </button>
       </div>
@@ -14,12 +14,12 @@ const WaitingRoom = (props) => {
   };
 
   const waitingRoomText = () => {
-    if (props.currentUserId === props.hostID) {
+    if (currentUserId === hostID) {
       return (
         <h2 className="welcomeTextHost">
           As the <span className="welcomeTextHostSpan">host</span>, you can
           start the game whenever your party is ready!
-          <AllUsers windowText={"Lobby"} users={props.users} />
+          <AllUsers windowText={"Lobby"} users={users} />
           <Row className="seventy-five-row-seperator" />
           {startButton()}
         </h2>
@@ -29,10 +29,10 @@ const WaitingRoom = (props) => {
         <div>
           <h2 className="welcomeTextUser">
             The host,{" "}
-            <span className="welcomeTextUserSpan">{props.hostName}</span>, will
+            <span className="welcomeTextUserSpan">{hostName}</span>, will
             start the game soon!
           </h2>
-          <AllUsers windowText={"Lobby"} users={props.users} />
+          <AllUsers windowText={"Lobby"} users={users} />
         </div>
       );
     }
