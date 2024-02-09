@@ -23,7 +23,7 @@ const Room = ({gameStartedWaiting, match, history, currentUser, hostID, hostName
     resetQuestionsShuffle,
     resetUsersShuffle,
   } = useGameState();
-
+console.log("YOU ARE IN THE ROOM")
   useEffect(() => {
     //here to load inital waiting room of players, only runs if game hasn't officially started
     if (!gameStartedWaiting) {
@@ -45,7 +45,7 @@ const Room = ({gameStartedWaiting, match, history, currentUser, hostID, hostName
       fetchUsers();
     }
   }, []);
-console.log("all users", gameRound.allUsers)
+
   useEffect(() => {
     //this is only for users and not host
     if (hostEnd) {
@@ -238,6 +238,8 @@ console.log("all users", gameRound.allUsers)
 
   return (
     <div>
+      {/* {gameRound && (
+        <> */}
       <NavBar
         room={roomName}
         logoutBtn={logoutBtn}
@@ -266,6 +268,8 @@ console.log("all users", gameRound.allUsers)
           {/* this ^^^ kept after removing startbutton from here to keep css in order */}
         </Col>
       </ActionCableConsumer>
+      {/* </>
+      )} */}
     </div>
   );
 };

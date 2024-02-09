@@ -29,10 +29,18 @@ const App = () => {
             },
           });
           if (resp.ok) {
-            console.log("resp.ok", resp.ok)
+            console.log("resp.ok", resp.ok);
             const data = await resp.json();
             if (data.room) {
-              console.log("here is the room", data.room)
+              console.log("here is the data.user", data.user);
+              //this can handle both the user and the host, but run into issues if the host has button when refreshes
+              setRoomInfo({
+                currentUser: data.user,
+                roomName: data.room.room_name,
+                hostID: data.room.host_id,
+                hostName: data.room.host_name,
+                gameStarted: data.room.game_started,
+              });
             }
           } else {
             console.error("Token is invalid or missing");
@@ -44,6 +52,10 @@ const App = () => {
     };
     verifyToken();
   }, []);
+  console.log("here is the currentRoom", roomInfo.roomName);
+  console.log(
+    roomInfo.currentUser ? "THERE IS A USER" : "I DONT THINK THERE IS A USER"
+  );
 
   const setCreateRoom = (
     currentUser,
@@ -81,8 +93,8 @@ const App = () => {
         <Route
           exact
           path="/room/:id"
-          render={(routeParams) => {
-            return (
+          render={(routeParams) =>
+            roomInfo.currentUser ? (
               <Room
                 currentUser={roomInfo.currentUser}
                 hostID={roomInfo.hostID}
@@ -91,8 +103,8 @@ const App = () => {
                 gameStartedWaiting={roomInfo.gameStarted}
                 {...routeParams}
               />
-            );
-          }}
+            ) : null
+          }
         />
         <Route
           exact
