@@ -41,6 +41,7 @@ const Room = ({gameStartedWaiting, match, history, currentUser, hostID, hostName
           alert(error);
         }
       };
+      console.log("checking in here")
       fetchUsers();
     }
   }, []);

@@ -20,9 +20,32 @@ const App = () => {
   useEffect(() => {
     const token = localStorage.getItem("token")
     if (token) {
-      console.log("here be token", token)
+      // Send token to backend for verification
+      fetch(`http://localhost:3000/verify_token`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token
+        }
+      })
+    //   .then(response => {
+    //     if (response.ok) {
+    //       // Token is valid
+    //       console.log("Token is valid");
+    //       // Perform any necessary actions, such as fetching user or room data
+    //     } else {
+    //       // Token is invalid or missing
+    //       console.error("Token is invalid or missing");
+    //       // Handle error or redirect user to login page
+    //     }
+    //   })
+    //   .catch(error => {
+    //     console.error("Error verifying token:", error);
+    //     // Handle error
+    //   });
     } 
-  }, [])
+  }, []);
+  console.log("currentuser", roomInfo.currentUser)
 
   const setCreateRoom = (currentUser, roomName, hostID, hostName, gameStarted) => {
     setRoomInfo({
