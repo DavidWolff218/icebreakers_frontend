@@ -8,52 +8,56 @@ import CreateRoom from "./containers/createRoom";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const App = () => {
-
   const [roomInfo, setRoomInfo] = useState({
     currentUser: "",
     roomName: "",
     hostID: "",
     hostName: "",
-    gameStarted: false
+    gameStarted: false,
   });
 
   useEffect(() => {
-    const token = localStorage.getItem("token")
-    if (token) {
-      // Send token to backend for verification
-      fetch(`http://localhost:3000/verify_token`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': token
+    const verifyToken = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (token) {
+          const resp = await fetch(`http://localhost:3000/verify_token`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: token,
+            },
+          });
+          if (resp.ok) {
+            console.log("resp.ok", resp.ok)
+            const data = await resp.json();
+            if (data.room) {
+              console.log("here is the room", data.room)
+            }
+          } else {
+            console.error("Token is invalid or missing");
+          }
         }
-      })
-    //   .then(response => {
-    //     if (response.ok) {
-    //       // Token is valid
-    //       console.log("Token is valid");
-    //       // Perform any necessary actions, such as fetching user or room data
-    //     } else {
-    //       // Token is invalid or missing
-    //       console.error("Token is invalid or missing");
-    //       // Handle error or redirect user to login page
-    //     }
-    //   })
-    //   .catch(error => {
-    //     console.error("Error verifying token:", error);
-    //     // Handle error
-    //   });
-    } 
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    verifyToken();
   }, []);
-  console.log("currentuser", roomInfo.currentUser)
 
-  const setCreateRoom = (currentUser, roomName, hostID, hostName, gameStarted) => {
+  const setCreateRoom = (
+    currentUser,
+    roomName,
+    hostID,
+    hostName,
+    gameStarted
+  ) => {
     setRoomInfo({
       currentUser: currentUser,
       roomName: roomName,
       hostID: hostID,
       hostName: hostName,
-      gameStarted: gameStarted
+      gameStarted: gameStarted,
     });
   };
 
