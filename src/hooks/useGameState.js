@@ -15,6 +15,7 @@ const useGameState = (props) => {
     reshufflingUsers: false,
     reshufflingQuestions: false,
     allUsers: [],
+    gameStarted: false,
     //   timerRunning: false,
     //   timerSeconds: 5,
     //   timerIntervalID: "",
@@ -40,6 +41,7 @@ const useGameState = (props) => {
         reshufflingUsers: resp.reshufflingUsers,
         reshufflingQuestions: resp.reshufflingQuestions,
         allUsers: resp.allUsers,
+        gameStarted: resp.room.game_started
         // add voting timer stuff here
       });
       return;

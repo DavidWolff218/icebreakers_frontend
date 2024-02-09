@@ -38,13 +38,13 @@ const Room = ({gameStartedWaiting, match, history, currentUser, hostID, hostName
             allUsers: data.allUsers,
           });
         } catch (error) {
-          console.log(error);
+          alert(error);
         }
       };
       fetchUsers();
     }
   }, []);
-
+console.log("all users", gameRound.allUsers)
   useEffect(() => {
     //this is only for users and not host
     if (hostEnd) {
@@ -81,8 +81,7 @@ const Room = ({gameStartedWaiting, match, history, currentUser, hostID, hostName
         throw new Error(`HTTP error! Status: ${resp.status}`);
       }
     } catch (error) {
-      console.log(error);
-      throw error;
+      alert(error);
     }
   };
 
@@ -104,8 +103,7 @@ const Room = ({gameStartedWaiting, match, history, currentUser, hostID, hostName
         throw new Error(`HTTP error! Status: ${resp.status}`);
       }
     } catch (error) {
-      console.log(error);
-      throw error;
+       throw error;
     }
   };
 
@@ -165,7 +163,7 @@ const Room = ({gameStartedWaiting, match, history, currentUser, hostID, hostName
       localStorage.removeItem("token");
       history.push(`/`);
     } catch (error) {
-      console.log(error);
+      alert(error);
     }
   };
 
@@ -188,7 +186,7 @@ const Room = ({gameStartedWaiting, match, history, currentUser, hostID, hostName
       localStorage.removeItem("token");
       history.push(`/`);
     } catch (error) {
-      console.log(error);
+      alert(error);
     }
   };
 
@@ -230,7 +228,9 @@ const Room = ({gameStartedWaiting, match, history, currentUser, hostID, hostName
           users={gameRound.allUsers}
         />
       );
-    } else if (gameStartedWaiting) {
+    } else if (gameStartedWaiting || gameRound.gameStarted) {
+      //gameRound.gameStarted for use cases of user refresh?
+      //might need to make this the if and switch with !gameStartedWaiting...
       return "you will be added in the next round";
     }
   };
