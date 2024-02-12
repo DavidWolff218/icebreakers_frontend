@@ -230,7 +230,7 @@ const Room = ({gameStartedWaiting, match, history, currentUser, hostID, hostName
           users={gameRound.allUsers}
         />
       );
-    } else if (gameStartedWaiting || gameRound.gameStarted) {
+    } else if (gameStartedWaiting) {
       //gameRound.gameStarted for use cases of user refresh?
       //might need to make this the if and switch with !gameStartedWaiting...
       return "you will be added in the next round";
