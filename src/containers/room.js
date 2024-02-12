@@ -23,7 +23,8 @@ const Room = ({gameStartedWaiting, match, history, currentUser, hostID, hostName
     resetQuestionsShuffle,
     resetUsersShuffle,
   } = useGameState();
-console.log("YOU ARE IN THE ROOM")
+
+  console.log("YOU ARE IN THE ROOM")
   useEffect(() => {
     //here to load inital waiting room of players, only runs if game hasn't officially started
     if (!gameStartedWaiting) {
