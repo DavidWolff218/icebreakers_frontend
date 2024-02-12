@@ -24,6 +24,7 @@ const Room = ({gameStartedWaiting, match, history, currentUser, hostID, hostName
     resetUsersShuffle,
   } = useGameState();
 
+  console.log("YOU ARE IN THE ROOM")
   useEffect(() => {
     //here to load inital waiting room of players, only runs if game hasn't officially started
     if (!gameStartedWaiting) {
@@ -38,9 +39,10 @@ const Room = ({gameStartedWaiting, match, history, currentUser, hostID, hostName
             allUsers: data.allUsers,
           });
         } catch (error) {
-          console.log(error);
+          alert(error);
         }
       };
+      console.log("checking in here")
       fetchUsers();
     }
   }, []);
@@ -81,8 +83,7 @@ const Room = ({gameStartedWaiting, match, history, currentUser, hostID, hostName
         throw new Error(`HTTP error! Status: ${resp.status}`);
       }
     } catch (error) {
-      console.log(error);
-      throw error;
+      alert(error);
     }
   };
 
@@ -104,8 +105,7 @@ const Room = ({gameStartedWaiting, match, history, currentUser, hostID, hostName
         throw new Error(`HTTP error! Status: ${resp.status}`);
       }
     } catch (error) {
-      console.log(error);
-      throw error;
+       throw error;
     }
   };
 
@@ -165,7 +165,7 @@ const Room = ({gameStartedWaiting, match, history, currentUser, hostID, hostName
       localStorage.removeItem("token");
       history.push(`/`);
     } catch (error) {
-      console.log(error);
+      alert(error);
     }
   };
 
@@ -188,7 +188,7 @@ const Room = ({gameStartedWaiting, match, history, currentUser, hostID, hostName
       localStorage.removeItem("token");
       history.push(`/`);
     } catch (error) {
-      console.log(error);
+      alert(error);
     }
   };
 
@@ -230,13 +230,17 @@ const Room = ({gameStartedWaiting, match, history, currentUser, hostID, hostName
           users={gameRound.allUsers}
         />
       );
-    } else if (gameStartedWaiting) {
+    } else if (gameStartedWaiting || gameRound.gameStarted) {
+      //gameRound.gameStarted for use cases of user refresh?
+      //might need to make this the if and switch with !gameStartedWaiting...
       return "you will be added in the next round";
     }
   };
 
   return (
     <div>
+      {/* {gameRound && (
+        <> */}
       <NavBar
         room={roomName}
         logoutBtn={logoutBtn}
@@ -265,6 +269,8 @@ const Room = ({gameStartedWaiting, match, history, currentUser, hostID, hostName
           {/* this ^^^ kept after removing startbutton from here to keep css in order */}
         </Col>
       </ActionCableConsumer>
+      {/* </>
+      )} */}
     </div>
   );
 };
