@@ -15,6 +15,7 @@ const App = () => {
     hostName: "",
     gameStarted: false,
   });
+  console.log("APP GAME STARTED", roomInfo.gameStarted)
 
   useEffect(() => {
     const verifyToken = async () => {
@@ -96,7 +97,7 @@ const App = () => {
                 hostID={roomInfo.hostID}
                 roomName={roomInfo.roomName}
                 hostName={roomInfo.hostName}
-                gameStartedWaiting={roomInfo.gameStarted}
+                gameStarted={roomInfo.gameStarted}
                 {...routeParams}
               />
             ) : null
