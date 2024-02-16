@@ -52,8 +52,7 @@ const App = () => {
     };
     verifyToken();
   }, []);
-  console.log("here is the currentRoom", roomInfo.roomName);
- 
+  
   const setCreateRoom = (
     currentUser,
     roomName,

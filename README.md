@@ -32,7 +32,7 @@ Icebreakers is a social party game web app designed for quick and easy play with
 ![Mobile View](https://user-images.githubusercontent.com/60520496/91590398-f8c35e80-e920-11ea-8c88-81c5cbfa948a.png)
 
 ### Prerequisites
-- Node.js: Version 21.1.0
+- Node.js: Version 14.4.0
 - npm: 10.3.0
 - Ruby: 2.6.1
 - Rails: Version 6.0.3 or higher
