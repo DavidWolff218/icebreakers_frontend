@@ -24,11 +24,12 @@ const Room = ({gameStarted, match, history, currentUser, hostID, hostName, roomN
     resetUsersShuffle,
   } = useGameState();
 
-  console.log("YOU ARE IN THE ROOM")
+  
   console.log("gamerpund", gameRound)
   useEffect(() => {
     //here to load inital waiting room of players, only runs if game hasn't officially started
     if (!gameStarted) {
+      console.log("game has not started")
       const fetchUsers = async () => {
         try {
           const roomId = match.params.id;
@@ -39,11 +40,33 @@ const Room = ({gameStarted, match, history, currentUser, hostID, hostName, roomN
           setGameRound({
             allUsers: data.allUsers,
           });
-        } catch (error) {
+        } catch(error) {
           alert(error);
         }
       };
       fetchUsers();
+    } else {
+      console.log("why am i here?")
+      // const fetchRound = async () => {
+      //   try {
+      //     const roomId = match.params.id;
+      //     console.log('ready to fetch')
+      //     const resp = await fetch(
+      //       `http://localhost:3000/users/midgame/${roomId}`
+      //     );
+      //     const data = await resp.json()
+      //     setGameRound({
+      //       currentPlayer: data.currentPlayer.username,
+      //       currentPlayerID: data.currentPlayer.id,
+      //       currentQuestion: data.currentQuestion,
+      //       allUsers: data.allUsers,
+      //       gameActive: data.room.game_started
+      //     })
+      //   } catch(error){
+      //     alert(error)
+      //   }
+      // }
+      // fetchRound()
     }
   }, []);
 
@@ -193,7 +216,7 @@ const Room = ({gameStarted, match, history, currentUser, hostID, hostName, roomN
   };
 
   const screenText = () => {
-    console.log("in the screen text")
+
     return (
       <div>
         {/* moved allUsers component to inside here, before was in a conditional in return. does mess with css, need to fix */}
@@ -221,7 +244,7 @@ const Room = ({gameStarted, match, history, currentUser, hostID, hostName, roomN
   };
 
   const waitingText = () => {
-    console.log("in the waiting text")
+
     if (!gameStarted) {
 
       return (
