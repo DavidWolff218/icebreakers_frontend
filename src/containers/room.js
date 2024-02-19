@@ -47,26 +47,26 @@ const Room = ({gameStarted, match, history, currentUser, hostID, hostName, roomN
       fetchUsers();
     } else {
       console.log("why am i here?")
-      // const fetchRound = async () => {
-      //   try {
-      //     const roomId = match.params.id;
-      //     console.log('ready to fetch')
-      //     const resp = await fetch(
-      //       `http://localhost:3000/users/midgame/${roomId}`
-      //     );
-      //     const data = await resp.json()
-      //     setGameRound({
-      //       currentPlayer: data.currentPlayer.username,
-      //       currentPlayerID: data.currentPlayer.id,
-      //       currentQuestion: data.currentQuestion,
-      //       allUsers: data.allUsers,
-      //       gameActive: data.room.game_started
-      //     })
-      //   } catch(error){
-      //     alert(error)
-      //   }
-      // }
-      // fetchRound()
+      const fetchRound = async () => {
+        try {
+          const roomId = match.params.id;
+          console.log('ready to fetch', roomId)
+          const resp = await fetch(
+            `http://localhost:3000/users/midgame/${roomId}`
+          );
+          const data = await resp.json()
+          setGameRound({
+            currentPlayer: data.currentPlayer.username,
+            currentPlayerID: data.currentPlayer.id,
+            currentQuestion: data.currentQuestion,
+            allUsers: data.allUsers,
+            gameActive: data.room.game_started
+          })
+        } catch(error){
+          alert(error)
+        }
+      }
+      fetchRound()
     }
   }, []);
 
