@@ -29,7 +29,6 @@ const Room = ({gameStarted, match, history, currentUser, hostID, hostName, roomN
   useEffect(() => {
     //here to load inital waiting room of players, only runs if game hasn't officially started
     if (!gameStarted) {
-      console.log("game has not started")
       const fetchUsers = async () => {
         try {
           const roomId = match.params.id;
@@ -46,11 +45,9 @@ const Room = ({gameStarted, match, history, currentUser, hostID, hostName, roomN
       };
       fetchUsers();
     } else {
-      console.log("why am i here?")
       const fetchRound = async () => {
         try {
           const roomId = match.params.id;
-          console.log('ready to fetch', roomId)
           const resp = await fetch(
             `http://localhost:3000/users/midgame/${roomId}`
           );
