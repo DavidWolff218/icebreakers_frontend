@@ -96,7 +96,7 @@ const Room = ({gameStarted, match, history, currentUser, hostID, hostName, roomN
         }),
       };
       const resp = await fetch(
-        `http://localhost:3000/users/select/foo`,
+        `http://localhost:3000/users/select`,
         reqObj
       );
       if (!resp.ok) {
@@ -120,7 +120,7 @@ const Room = ({gameStarted, match, history, currentUser, hostID, hostName, roomN
           },
         }),
       };
-      const resp = await fetch(`http://localhost:3000/users/start/foo`, reqObj);
+      const resp = await fetch(`http://localhost:3000/users/start`, reqObj);
       if (!resp.ok) {
         throw new Error(`HTTP error! Status: ${resp.status}`);
       }
