@@ -15,6 +15,7 @@ const App = () => {
     hostName: "",
     gameStarted: false,
   });
+  console.log("APP GAME STARTED", roomInfo.gameStarted)
 
   useEffect(() => {
     const verifyToken = async () => {
@@ -29,10 +30,8 @@ const App = () => {
             },
           });
           if (resp.ok) {
-            console.log("resp.ok", resp.ok);
             const data = await resp.json();
             if (data.room) {
-              console.log("here is the data.user", data.user);
               //this can handle both the user and the host, but run into issues if the host has button when refreshes
               setRoomInfo({
                 currentUser: data.user,
@@ -52,8 +51,7 @@ const App = () => {
     };
     verifyToken();
   }, []);
-  console.log("here is the currentRoom", roomInfo.roomName);
- 
+  
   const setCreateRoom = (
     currentUser,
     roomName,
@@ -97,7 +95,7 @@ const App = () => {
                 hostID={roomInfo.hostID}
                 roomName={roomInfo.roomName}
                 hostName={roomInfo.hostName}
-                gameStartedWaiting={roomInfo.gameStarted}
+                gameStarted={roomInfo.gameStarted}
                 {...routeParams}
               />
             ) : null

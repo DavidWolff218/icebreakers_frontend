@@ -8,7 +8,7 @@ import WaitingRoom from "../components/waitingRoom";
 import useGameState from "../hooks/useGameState";
 import EndGameModal from "../modals/endGameModal";
 
-const Room = ({gameStartedWaiting, match, history, currentUser, hostID, hostName, roomName }) => {
+const Room = ({gameStarted, match, history, currentUser, hostID, hostName, roomName }) => {
   // const [gameStarted, setGameStarted] = useState(false);
   // keeping this here for Reference, originally used in useEffect conditional (false),
   // handleReceived(if/true, else/if/false for gameStarted trigger/1st play), waitingText(if/false, elseif/false),
@@ -24,10 +24,11 @@ const Room = ({gameStartedWaiting, match, history, currentUser, hostID, hostName
     resetUsersShuffle,
   } = useGameState();
 
-  console.log("YOU ARE IN THE ROOM")
+  
+  console.log("gamerpund", gameRound)
   useEffect(() => {
     //here to load inital waiting room of players, only runs if game hasn't officially started
-    if (!gameStartedWaiting) {
+    if (!gameStarted) {
       const fetchUsers = async () => {
         try {
           const roomId = match.params.id;
@@ -38,12 +39,31 @@ const Room = ({gameStartedWaiting, match, history, currentUser, hostID, hostName
           setGameRound({
             allUsers: data.allUsers,
           });
-        } catch (error) {
+        } catch(error) {
           alert(error);
         }
       };
-      console.log("checking in here")
       fetchUsers();
+    } else {
+      const fetchRound = async () => {
+        try {
+          const roomId = match.params.id;
+          const resp = await fetch(
+            `http://localhost:3000/users/midgame/${roomId}`
+          );
+          const data = await resp.json()
+          setGameRound({
+            currentPlayer: data.currentPlayer.username,
+            currentPlayerID: data.currentPlayer.id,
+            currentQuestion: data.currentQuestion,
+            allUsers: data.allUsers,
+            gameActive: data.room.game_started
+          })
+        } catch(error){
+          alert(error)
+        }
+      }
+      fetchRound()
     }
   }, []);
 
@@ -193,6 +213,7 @@ const Room = ({gameStartedWaiting, match, history, currentUser, hostID, hostName
   };
 
   const screenText = () => {
+
     return (
       <div>
         {/* moved allUsers component to inside here, before was in a conditional in return. does mess with css, need to fix */}
@@ -220,7 +241,9 @@ const Room = ({gameStartedWaiting, match, history, currentUser, hostID, hostName
   };
 
   const waitingText = () => {
-    if (!gameStartedWaiting) {
+
+    if (!gameStarted) {
+
       return (
         <WaitingRoom
           hostID={hostID}
@@ -230,11 +253,12 @@ const Room = ({gameStartedWaiting, match, history, currentUser, hostID, hostName
           users={gameRound.allUsers}
         />
       );
-    } else if (gameStartedWaiting) {
-      //gameRound.gameStarted for use cases of user refresh?
-      //might need to make this the if and switch with !gameStartedWaiting...
-      return "you will be added in the next round";
-    }
+    } 
+    // else if (gameStarted) {
+    //   //gameRound.gameStarted for use cases of user refresh?
+    //   //might need to make this the if and switch with !gameStarted...
+    //   return "you will be added in the next round";
+    // }
   };
 
   return (
@@ -263,8 +287,8 @@ const Room = ({gameStartedWaiting, match, history, currentUser, hostID, hostName
         <Col className="align-self-center">
           <Row className="seventy-five-row-seperator" />
           {/* this displays the gameplay text (questions, players, button etc) or the waiting room */}
-          {/* This conditional is to check if the game is active for the current player window, shortened it from gameRound.currentQuestion && Object.keys(gameRound.currentQuestion).length > 0 */}
-          {gameRound.currentPlayer ? screenText() : waitingText()}
+          {/* This conditional is to check if the game is active for the current player window,was checking for currentPLayer, now if gameStarted based on useGameState*/}
+          {gameRound.gameActive ? screenText() : waitingText()}
           <Row className="seventy-five-row-seperator" />
           {/* this ^^^ kept after removing startbutton from here to keep css in order */}
         </Col>
