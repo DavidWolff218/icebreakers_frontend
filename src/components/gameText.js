@@ -13,21 +13,7 @@ const gameText = ({
 }) => {
   const renderGameText = () => {
 
-    // if (props.votingQuestionA) {
-    //   return (
-    //     <Voting
-    //       currentPlayer={props.currentPlayer}
-    //       votingQuestionA={props.votingQuestionA}
-    //       votingQuestionB={props.votingQuestionB}
-    //       hostButton={props.hostButton}
-    //       handleVote={props.handleVote}
-    //       timerRunning={props.timerRunning}
-    //       runTimer={props.runTimer}
-    //       timerSeconds={props.timerSeconds}
-    //       resetTimer={props.resetTimer}
-    //     />
-    //   );
-    // } else {
+   
     return (
       <div>
         <h3 className="currentPlayer">{currentPlayer}</h3>

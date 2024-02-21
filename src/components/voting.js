@@ -62,6 +62,42 @@ const voting = (props) => {
 
   //need to correct ^^ when re-intergrting coting feature
 
+  //  const handleVote = (vote) => {
+  //     const reqObj = {
+  //       method: "PATCH",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({
+  //         user: {
+  //           room: match.params.id,
+  //           vote_id: vote,
+  //           currentPlayer: gameRound.currentPlayer,
+  //         },
+  //       }),
+  //     };
+  //     fetch(`http://localhost:3000/users/voting/foo`, reqObj);
+  //   };
+//^^ this belongs in the room component
+
+ // if (props.votingQuestionA) {
+    //   return (
+    //     <Voting
+    //       currentPlayer={props.currentPlayer}
+    //       votingQuestionA={props.votingQuestionA}
+    //       votingQuestionB={props.votingQuestionB}
+    //       hostButton={props.hostButton}
+    //       handleVote={props.handleVote}
+    //       timerRunning={props.timerRunning}
+    //       runTimer={props.runTimer}
+    //       timerSeconds={props.timerSeconds}
+    //       resetTimer={props.resetTimer}
+    //     />
+    //   );
+    // } else {
+
+    //^^^^^this come from gameText component, at the top of the renderGameText func
+
   return (
     <div>
       <h3 className="currentPlayer">{props.currentPlayer}</h3>

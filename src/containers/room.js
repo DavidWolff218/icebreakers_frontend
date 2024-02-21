@@ -129,23 +129,7 @@ const Room = ({gameStarted, match, history, currentUser, hostID, hostName, roomN
     }
   };
 
-  //  const handleVote = (vote) => {
-  //     const reqObj = {
-  //       method: "PATCH",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({
-  //         user: {
-  //           room: match.params.id,
-  //           vote_id: vote,
-  //           currentPlayer: gameRound.currentPlayer,
-  //         },
-  //       }),
-  //     };
-  //     fetch(`http://localhost:3000/users/voting/foo`, reqObj);
-  //   };
-
+  
   const playerButton = () => {
     //currentUser is to track the individual user on their device, gameRound tracks whose turn it is
     if (
