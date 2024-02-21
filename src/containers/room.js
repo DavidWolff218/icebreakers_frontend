@@ -13,7 +13,7 @@ const Room = ({gameStarted, match, history, currentUser, hostID, hostName, roomN
   // keeping this here for Reference, originally used in useEffect conditional (false),
   // handleReceived(if/true, else/if/false for gameStarted trigger/1st play), waitingText(if/false, elseif/false),
   // and in return statment ternary for screentText or waiting Text
-
+console.log("gamestartedlobby", gameStarted)
   const {
     gameRound,
     setGameRound,
@@ -24,9 +24,7 @@ const Room = ({gameStarted, match, history, currentUser, hostID, hostName, roomN
     resetUsersShuffle,
   } = useGameState();
 
-  
-  console.log("gamerpund", gameRound)
-  useEffect(() => {
+    useEffect(() => {
     //here to load inital waiting room of players, only runs if game hasn't officially started
     if (!gameStarted) {
       const fetchUsers = async () => {
@@ -45,6 +43,7 @@ const Room = ({gameStarted, match, history, currentUser, hostID, hostName, roomN
       };
       fetchUsers();
     } else {
+      //runs only when game has started and player joins mid
       const fetchRound = async () => {
         try {
           const roomId = match.params.id;
@@ -270,7 +269,6 @@ const Room = ({gameStarted, match, history, currentUser, hostID, hostName, roomN
         <br></br>
         <Col className="align-self-center">
           <Row className="seventy-five-row-seperator" />
-          {/* this displays the gameplay text (questions, players, button etc) or the waiting room */}
           {/* This conditional is to check if the game is active for the current player window,was checking for currentPLayer, now if gameStarted based on useGameState*/}
           {gameRound.gameActive ? screenText() : waitingText()}
           <Row className="seventy-five-row-seperator" />
