@@ -13,7 +13,7 @@ const Room = ({gameStarted, match, history, currentUser, hostID, hostName, roomN
   // keeping this here for Reference, originally used in useEffect conditional (false),
   // handleReceived(if/true, else/if/false for gameStarted trigger/1st play), waitingText(if/false, elseif/false),
   // and in return statment ternary for screentText or waiting Text
-
+console.log("gamestartedlobby", gameStarted)
   const {
     gameRound,
     setGameRound,
@@ -24,9 +24,7 @@ const Room = ({gameStarted, match, history, currentUser, hostID, hostName, roomN
     resetUsersShuffle,
   } = useGameState();
 
-  
-  console.log("gamerpund", gameRound)
-  useEffect(() => {
+    useEffect(() => {
     //here to load inital waiting room of players, only runs if game hasn't officially started
     if (!gameStarted) {
       const fetchUsers = async () => {
@@ -45,6 +43,7 @@ const Room = ({gameStarted, match, history, currentUser, hostID, hostName, roomN
       };
       fetchUsers();
     } else {
+      //runs only when game has started and player joins mid
       const fetchRound = async () => {
         try {
           const roomId = match.params.id;
@@ -96,7 +95,7 @@ const Room = ({gameStarted, match, history, currentUser, hostID, hostName, roomN
         }),
       };
       const resp = await fetch(
-        `http://localhost:3000/users/select/foo`,
+        `http://localhost:3000/users/select`,
         reqObj
       );
       if (!resp.ok) {
@@ -120,7 +119,7 @@ const Room = ({gameStarted, match, history, currentUser, hostID, hostName, roomN
           },
         }),
       };
-      const resp = await fetch(`http://localhost:3000/users/start/foo`, reqObj);
+      const resp = await fetch(`http://localhost:3000/users/start`, reqObj);
       if (!resp.ok) {
         throw new Error(`HTTP error! Status: ${resp.status}`);
       }
@@ -129,23 +128,7 @@ const Room = ({gameStarted, match, history, currentUser, hostID, hostName, roomN
     }
   };
 
-  //  const handleVote = (vote) => {
-  //     const reqObj = {
-  //       method: "PATCH",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({
-  //         user: {
-  //           room: match.params.id,
-  //           vote_id: vote,
-  //           currentPlayer: gameRound.currentPlayer,
-  //         },
-  //       }),
-  //     };
-  //     fetch(`http://localhost:3000/users/voting/foo`, reqObj);
-  //   };
-
+  
   const playerButton = () => {
     //currentUser is to track the individual user on their device, gameRound tracks whose turn it is
     if (
@@ -286,7 +269,6 @@ const Room = ({gameStarted, match, history, currentUser, hostID, hostName, roomN
         <br></br>
         <Col className="align-self-center">
           <Row className="seventy-five-row-seperator" />
-          {/* this displays the gameplay text (questions, players, button etc) or the waiting room */}
           {/* This conditional is to check if the game is active for the current player window,was checking for currentPLayer, now if gameStarted based on useGameState*/}
           {gameRound.gameActive ? screenText() : waitingText()}
           <Row className="seventy-five-row-seperator" />

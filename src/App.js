@@ -15,7 +15,6 @@ const App = () => {
     hostName: "",
     gameStarted: false,
   });
-  console.log("APP GAME STARTED", roomInfo.gameStarted)
 
   useEffect(() => {
     const verifyToken = async () => {
