@@ -41,14 +41,11 @@ const useGameState = (props) => {
         gameActive: resp.room.game_started
         // add voting timer stuff here
       });
-      return;
     } else if (resp.room && !resp.room.game_started) {
-      console.log("DOES THIS ACTUALLY HIT??")
       //used for updating lobby of users as new ones come in
       setGameRound({
         allUsers: resp.allUsers,
       });
-      return;
     } 
   };
 
